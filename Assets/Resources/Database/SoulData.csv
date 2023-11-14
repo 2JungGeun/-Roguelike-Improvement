@@ -1,0 +1,6 @@
+﻿ID,Name,Speed,Damage,Range,IsUseDash,AvailableJumpCount
+0,Knight,6,40,2,TRUE,2
+1,Warrior,5,60,2,FALSE,1
+2,Soldier,5,60,7,FALSE,2
+3,Magician,6,30,9,TRUE,1
+4,Archer,5,20,7,TRUE,2
