@@ -19,19 +19,8 @@ public class BTRunner
     }
     public void Tick()
     {
+        root.RemoveConditions();
         root.CheckConditons();
-        root.Tick();
+        root.RunningNode.Tick();
     }
-}
-
-public interface IObserver
-{
-    public void OnNotify();
-}
-
-
-class BlackBoard
-{
-    string name;
-    string type;
 }
