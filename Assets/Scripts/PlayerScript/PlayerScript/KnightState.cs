@@ -114,7 +114,7 @@ public class KnightSkill1 : Skill
         {
             foreach (RaycastHit2D hit in hits)
             {
-                hit.collider.GetComponent<EnemySC>().Hit(soul.Data.damage * 2);
+                hit.collider.GetComponent<BossScript>().Hit(soul.Data.damage * 2);
             }
         }
     }
@@ -186,7 +186,7 @@ public class KnightSkill2 : Skill
         if (hits != null)
         { foreach (RaycastHit2D hit in hits)
             {
-                hit.collider.GetComponent<EnemySC>().Hit(soul.Data.damage);
+                hit.collider.GetComponent<BossScript>().Hit(soul.Data.damage);
             }
         }
     }

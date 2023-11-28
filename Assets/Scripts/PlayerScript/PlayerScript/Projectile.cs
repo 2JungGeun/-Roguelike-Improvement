@@ -43,7 +43,7 @@ public class Projectile : MonoBehaviour
     {
         if (collision.CompareTag("Enemy"))
         {
-            collision.gameObject.GetComponent<EnemySC>().Hit(this.damage);
+            collision.gameObject.GetComponent<BossScript>().Hit(this.damage);
             Destroy(this.gameObject);
         }
         else if (collision.CompareTag("Ground"))

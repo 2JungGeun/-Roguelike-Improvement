@@ -190,6 +190,8 @@ public class PlayerController : MonoBehaviour
 
     public void SwapSoul()
     {
+        if (currSoul.soulState.GetType() != Type.GetType(currSoul.Data.name + "IdleState"))
+            return;
         if (ownSouls.Count == 2)
         {
             currSoul.SwapingSoul(input);

@@ -3,14 +3,34 @@ using System.Collections.Generic;
 using UnityEngine;
 using BT;
 
+public class EnemyData
+{
+    public float hp;
+    public float damage;
+    public float moveSpeed;
+
+}
 public class BossScript : MonoBehaviour
 {
+    [SerializeField]
+    private GameObject UIPrefab;
+    [SerializeField]
+    private GameObject canvas;
+    private int hp;
+    public int HP { get { return hp; } }
     BossAction action;
     BTRunner bt;
+    public delegate void healthEventHandler();
+    public healthEventHandler HealthEventHandler;
 
-    private void Start()
+    void Awake()
     {
-        action = new BossAction();
+        hp = 1000;
+        Instantiate(UIPrefab, canvas.transform).GetComponent<EnemyUI>().Initialze("Boss");
+    }
+    void Start()
+    {
+        action = new BossAction(GetComponent<Collider2D>(), GetComponent<Rigidbody2D>(), GetComponent<Transform>(), GetComponent<SpriteRenderer>(), GetComponent<Animator>(), GetComponent<AudioSource>());
         bt = new BTRunner
         (
             new BTRoot
@@ -56,13 +76,45 @@ public class BossScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        bt.Tick();
+        action.Tick();
+        //bt.Tick();
+    }
+
+    public void Hit(int damage)
+    {
+        hp -= damage;
+        HealthEventHandler();
     }
 }
 
 public class BossAction
 {
+    protected Collider2D collider;
+    public Collider2D Collider { get { return collider; } set { collider = value; } }
+    protected Rigidbody2D rigid;
+    public Rigidbody2D Rigid { get { return rigid; } set { rigid = value; } }
+    protected Transform transform;
+    public Transform mTransform { get { return transform; } set { transform = value; } }
+    protected SpriteRenderer sprite;
+    public SpriteRenderer Sprite { get { return sprite; } set { sprite = value; } }
+    protected Animator animator;
+    public Animator Anime { get { return animator; } set { animator = value; } }
+    protected AudioSource audioSource;
+    public AudioSource Audio { get { return audioSource; } set { audioSource = value; } }
+    public BossAction(Collider2D collider, Rigidbody2D rigid, Transform transform, SpriteRenderer sprite, Animator anime, AudioSource audioSource)
+    {
+        this.collider = collider;
+        this.rigid = rigid;
+        this.transform = transform;
+        this.sprite = sprite;
+        this.animator = anime;
+        this.audioSource = audioSource;
+    }
     private float time = 0.0f;
+    public void Tick()
+    {
+
+    }
     public eNodeState Print()
     {
         int num = Random.Range(0, 10);

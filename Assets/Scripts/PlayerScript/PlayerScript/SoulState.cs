@@ -31,7 +31,6 @@ abstract public class IdleState : SoulState
 {
     override public void start(Soul soul, InputManager input)
     {
-        Debug.Log("IDlE");
         soul.Anime.Play("IDLE");
     }
     override public SoulState handleInput(Soul soul, InputManager input)
@@ -71,8 +70,6 @@ abstract public class WalkState : SoulState
     {
         audioClip = Resources.Load<AudioClip>("Sound/Public/Walk/Walk");
         soul.Audio.clip = audioClip;
-        Debug.Log(audioClip.name);
-        Debug.Log("Walk");
         soul.Anime.Play("WALK");
         soul.Audio.Play();
     }
@@ -137,7 +134,6 @@ abstract public class JumpState : SoulState
     {
         audioClip = Resources.Load<AudioClip>("Sound/Public/Jump/Jump");
         soul.Audio.clip = audioClip;
-        Debug.Log("Jump");
         soul.Anime.Play("JUMP");
         soul.IsOnGround = false;
         Jump(soul);
@@ -204,7 +200,6 @@ abstract public class FallState : SoulState
     AudioClip audioClip;
     public override void start(Soul soul, InputManager input)
     {
-        Debug.Log("Fall");
         soul.Anime.Play("FALL");
         soul.IsOnGround = false;
         soul.Rigid.gravityScale = soul.MoveData.fallGravityScale;
@@ -277,7 +272,6 @@ abstract public class DashState : SoulState
     protected float dashTime;
     override public void start(Soul soul, InputManager input)
     {
-        Debug.Log("DASH");
         dashTime = 0;
         soul.Anime.Play("DASH");
         soul.mCooldownTime.dashCoolingdown = false;
@@ -322,7 +316,6 @@ abstract public class GroundBasicAttackState : SoulState
 
     override public void start(Soul soul, InputManager input)
     {
-        Debug.Log("Attack" + soul.AttackCount);
         soul.attacking = true;
         soul.Anime.Play("ATTACK" + soul.AttackCount.ToString());
         soul.Audio.clip = audioClip;
@@ -365,7 +358,6 @@ abstract public class AirBasicAttackState : SoulState
     protected bool isAttack = false;
     public override void start(Soul soul, InputManager input)
     {
-        Debug.Log("AirAttack");
         soul.Anime.Play("AIRATTACK");
         soul.Audio.clip = audioClip;
         soul.Audio.Play();
@@ -425,7 +417,7 @@ abstract public class MeleeGroundBasicAttackState : GroundBasicAttackState
         {
             foreach (RaycastHit2D hit in hits)
             {
-                hit.collider.GetComponent<EnemySC>().Hit(soul.Data.damage);
+                hit.collider.GetComponent<BossScript>().Hit(soul.Data.damage);
             }
         }
         return true;
@@ -451,7 +443,7 @@ abstract public class MeleeAirBasicAttackState : AirBasicAttackState
         {
             foreach (RaycastHit2D hit in hits)
             {
-                hit.collider.gameObject.GetComponent<EnemySC>().Hit(soul.Data.damage);
+                hit.collider.gameObject.GetComponent<BossScript>().Hit(soul.Data.damage);
             }
         }
         return true;
@@ -548,7 +540,6 @@ public class HitState : SoulState
     AudioClip audioClip;
     public override void start(Soul soul, InputManager input)
     {
-        Debug.Log("HitState");
         soul.Anime.Play("HIT");
         audioClip = Resources.Load<AudioClip>("Sound/Public/Hit/HPHit");
         soul.Audio.clip = audioClip;
@@ -582,7 +573,6 @@ public class DeadState : SoulState
     public override void start(Soul soul, InputManager input)
     {
         time = 0.0f;
-        Debug.Log("Dead");
         dead = Object.Instantiate(Resources.Load<GameObject>("Prefab/DeadMain"), soul.mTransform.position, soul.mTransform.rotation);
         soul.Rigid.velocity = new Vector3(0.0f, 0.0f, 0.0f);
         dead.GetComponent<Rigidbody2D>().gravityScale = soul.Rigid.gravityScale;
