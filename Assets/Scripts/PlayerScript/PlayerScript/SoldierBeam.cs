@@ -14,7 +14,7 @@ public class SoldierBeam : MonoBehaviour
         StartCoroutine("objectDestroy");
 
     }
-    public void Initailize(int damage)
+    public void Initialize(int damage)
     {
         this.damage = damage;
     }

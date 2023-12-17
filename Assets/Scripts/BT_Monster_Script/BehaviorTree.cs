@@ -33,7 +33,7 @@ namespace BT
         protected eNodeState state;
         public eNodeState State { get { return state; } }
         public BTNode() { }
-        public abstract void Initailize(ref int priority, BTNode parent, BTRoot root);
+        public abstract void Initialize(ref int priority, BTNode parent, BTRoot root);
         public abstract void Tick();
         protected abstract void CheckInnerState();
         protected abstract void CanceledByConditionalAborts();
@@ -44,95 +44,78 @@ namespace BT
         private List<BTConditionalDecoratorNode> conditionNodes;
         private int abortNodePrioriy;
         public int AbortNodePrioriy { get { return abortNodePrioriy; } }
+        public bool isAbort = false;
         private BTNode runningNode;
         public BTNode RunningNode { get { return runningNode; } set { runningNode = value; } }
         private BTNode child;
-        public bool isAbort = false;
         public BTRoot(BTNode node)
         {
             this.child = node;
             this.runningNode = this;
             conditionNodes = new List<BTConditionalDecoratorNode>();
         }
-        public override void Initailize(ref int priority, BTNode parent, BTRoot root)
+        public override void Initialize(ref int priority, BTNode parent, BTRoot root)
         {
             this.priority = priority;
             priority++;
-            child.Initailize(ref priority, this, this);
+            child.Initialize(ref priority, this, this);
             child.LastChildPrioriy = priority;
         }
         public override void Tick()
         {
             CheckInnerState();
             runningNode = child;
-            Debug.Log("root tick" + priority);
+            //Debug.Log("root tick" + priority);
         }
         protected override void CheckInnerState()
         {
             Debug.Log("root func" + priority);
         }
         protected override void CanceledByConditionalAborts() { }
-        public void RemoveConditions()
+        public void CheckConditions()
         {
             if (conditionNodes.Count == 0) return;
-            for (int i = conditionNodes.Count - 1; i > -1; i--)
+            if (runningNode.Priority == abortNodePrioriy) 
             {
-                switch (conditionNodes[i].AbortType)
-                {
-                    case eAbortType.SELF:
-                        if (runningNode.Priority == conditionNodes[i].Priority)
-                        {
-                            conditionNodes.RemoveAt(conditionNodes.Count - 1);
-                            return;
-                        }
-                        break;
-                    case eAbortType.LOWPRIORITY:
-                    case eAbortType.BOTH:
-                        if (runningNode.Priority < conditionNodes[i].ParaentNode.Priority)
-                        {
-                            conditionNodes.RemoveAt(conditionNodes.Count - 1);
-                        }
-                        break;
-                }
+                isAbort = false;
+                return;
             }
-        }
-        public void CheckConditons()
-        {
-            if (runningNode.Priority == AbortNodePrioriy) isAbort = false;
-            if (conditionNodes.Count == 0) return;
             if (isAbort) return;
             for (int i = 0; i < conditionNodes.Count; i++)
-            {          
+            {
+                if (conditionNodes[i].Priority >= runningNode.Priority) return;
                 switch (conditionNodes[i].AbortType)
                 {
                     case eAbortType.SELF:
+                        if (conditionNodes[i].LastChildPrioriy < runningNode.Priority) continue;
+                        if (isConditionChanged(i)) return;
+                        break;
                     case eAbortType.BOTH:
-                        isConditionChanged(i);
+                        if(conditionNodes[i].ParaentNode.LastChildPrioriy > runningNode.Priority)
+                            if (isConditionChanged(i)) return;
                         break;
                     case eAbortType.LOWPRIORITY:
-                        if (runningNode.Priority > conditionNodes[i].LastChildPrioriy)
-                        {
-                            isConditionChanged(i);
-                        }
+                        if (runningNode.Priority > conditionNodes[i].LastChildPrioriy && conditionNodes[i].ParaentNode.LastChildPrioriy > runningNode.Priority)
+                            if (isConditionChanged(i)) return;
                         break;
-                }
+                }           
             }
         }
-        public void AddConditionNode(BTConditionalDecoratorNode node)
-        {
-            this.conditionNodes.Add(node);
-        }
-        private void isConditionChanged(int index)
+        private bool isConditionChanged(int index)
         {
             bool condition = conditionNodes[index].Funcion();
             if (condition != conditionNodes[index].Condition)
             {
                 isAbort = true;
                 abortNodePrioriy = conditionNodes[index].Priority;
-                conditionNodes.RemoveRange(index, conditionNodes.Count - index);
-                //Debug.Log("---------------------------------------Assert------------------------------------------" + conditionNodes.Count);
-                return;
+                Debug.Log("---------------------------------------Assert------------------------------------------" + conditionNodes.Count);
+                return true;
             }
+            return false;
+        }
+        public void AddConditionNode(BTConditionalDecoratorNode node)
+        {
+            this.conditionNodes.Add(node);
         }
     }
 
@@ -143,7 +126,7 @@ namespace BT
         {
             tick = func;
         }
-        public override void Initailize(ref int priority, BTNode parent, BTRoot root)
+        public override void Initialize(ref int priority, BTNode parent, BTRoot root)
         {
             this.priority = priority;
             this.parentNode = parent;
@@ -157,7 +140,7 @@ namespace BT
                 case eNodeState.SUCCESS:
                 case eNodeState.FAILURE:
                 case eNodeState.CANCLE:
-                    //Debug.Log("Action tick" + priority + "/" + lastChildPrioriy);
+                    Debug.Log("Action tick" + priority + "/" + lastChildPrioriy);
                     root.RunningNode = parentNode;
                     break;
                 case eNodeState.RUNNING:
@@ -193,24 +176,23 @@ namespace BT
             this.child = node;
             this.abortType = conditonalAbort;
         }
-        public BTConditionalDecoratorNode Deepcopy()
-        {
-            BTConditionalDecoratorNode temp = new BTConditionalDecoratorNode();
-            temp.parentNode = this.parentNode;
-            temp.priority = this.priority;
-            temp.lastChildPrioriy = this.lastChildPrioriy;
-            temp.tick = this.tick;
-            temp.condition = this.condition;
-            temp.abortType = this.abortType;
-            return temp;
-        }
-        public override void Initailize(ref int priority, BTNode parent, BTRoot root)
+        public override void Initialize(ref int priority, BTNode parent, BTRoot root)
         {
             this.priority = priority;
             this.parentNode = parent;
             this.root = root;
             priority++;
-            child.Initailize(ref priority, this, root);
+            switch (abortType)
+            {
+                case eAbortType.SELF:
+                case eAbortType.LOWPRIORITY:
+                case eAbortType.BOTH:
+                    this.root.AddConditionNode(this);
+                    break;
+                default:
+                    break;
+            }
+            child.Initialize(ref priority, this, root);
             child.LastChildPrioriy = priority;
         }
         public override void Tick()
@@ -220,36 +202,14 @@ namespace BT
             {
                 case eNodeState.RUNNING:
                     condition = tick?.Invoke() ?? false;
-                    //Debug.Log("conditonNode " + priority + "/" + lastChildPrioriy);
+                    Debug.Log("conditonNode " + priority + "/" + lastChildPrioriy);
                     if (!condition)
                     {
                         root.RunningNode = parentNode;
                         state = eNodeState.FAILURE;
-                        switch (abortType)
-                        {
-                            case eAbortType.LOWPRIORITY:
-                            case eAbortType.BOTH:
-                                root.AddConditionNode(this.Deepcopy());
-                                break;
-                            default:
-                                break;
-                        }
                         return;
                     }
-                    switch (abortType)
-                    {
-                        case eAbortType.NONE:
-                            break;
-                        case eAbortType.LOWPRIORITY:
-                        case eAbortType.SELF:
-                        case eAbortType.BOTH:
-                            root.AddConditionNode(this.Deepcopy());
-                            break;
-                        default:
-                            break;
-                    }
                     root.RunningNode = child;
-                    return;
                     break;
                 case eNodeState.SUCCESS:
                 case eNodeState.FAILURE:
@@ -278,10 +238,7 @@ namespace BT
         }
         protected override void CanceledByConditionalAborts()
         {
-            if (root.AbortNodePrioriy == priority)
-                root.RunningNode = this;
-            else
-                root.RunningNode = parentNode;
+            root.RunningNode = parentNode;
         }
     }
 
@@ -302,13 +259,13 @@ namespace BT
             }
             childNode.Tick();
         }
-        public override void Initailize(ref int priority, BTNode parent, BTRoot root)
+        public override void Initialize(ref int priority, BTNode parent, BTRoot root)
         {
             this.priority = priority;
             this.parentNode = parent;
             this.root = root;
             priority++;
-            childNode.Initailize(ref priority, this, root);
+            childNode.Initialize(ref priority, this, root);
             childNode.LastChildPrioriy = priority;
         }
         protected override void CheckInnerState()
@@ -334,7 +291,7 @@ namespace BT
             this.children = nodes;
             this.index = -1;
         }
-        public override void Initailize(ref int priority, BTNode parent, BTRoot root)
+        public override void Initialize(ref int priority, BTNode parent, BTRoot root)
         {
             this.priority = priority;
             this.parentNode = parent;
@@ -342,7 +299,7 @@ namespace BT
             foreach (BTNode node in children)
             {
                 priority++;
-                node.Initailize(ref priority, this, root);
+                node.Initialize(ref priority, this, root);
                 node.LastChildPrioriy = priority;
             }
         }
@@ -394,7 +351,7 @@ namespace BT
         public override void Tick()
         {
             CheckInnerState();
-            //Debug.Log("Sequence tick" + priority + "/" + lastChildPrioriy);
+            Debug.Log("Sequence tick" + priority + "/" + lastChildPrioriy);
             switch (state)
             {
                 case eNodeState.RUNNING:
@@ -438,7 +395,7 @@ namespace BT
         public override void Tick()
         {
             CheckInnerState();
-            //Debug.Log("Selector tick" + priority + "/" + lastChildPrioriy);
+            Debug.Log("Selector tick" + priority + "/" + lastChildPrioriy);
             switch (state)
             {
                 case eNodeState.RUNNING:
@@ -464,7 +421,7 @@ namespace BT
         }
         protected override void CheckInnerState()
         {
-            if(CheckCancleAndRunning()) return;
+            if (CheckCancleAndRunning()) return;
             switch (children[index].State)
             {
                 case eNodeState.SUCCESS:

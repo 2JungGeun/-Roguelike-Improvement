@@ -12,15 +12,14 @@ public class BTRunner
         root = node;
         nodeCount = 0;
     }
-    public void Initailize()
+    public void Initialize()
     {
-        root.Initailize(ref nodeCount, null, root);
+        root.Initialize(ref nodeCount, null, root);
         Debug.Log("Print Node Count : " + nodeCount);
     }
     public void Tick()
     {
-        root.RemoveConditions();
-        root.CheckConditons();
+        root.CheckConditions();
         root.RunningNode.Tick();
     }
 }

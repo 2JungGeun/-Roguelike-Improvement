@@ -69,7 +69,7 @@ public class MagicianSkill1 : Skill
             int randomX = Random.Range(-10, 11);
             int randomY = Random.Range(-10, 11);
             offset = new Vector3(soul.MoveData.lookAt * 1.2f + randomX * 0.2f, 1.0f + randomY * 0.2f, 0.0f);
-            GameObject.Instantiate(prefab, soul.mTransform.position + offset, Quaternion.identity).GetComponent<GuidedMissile>().Initailize(soul.Data.damage * 3);
+            GameObject.Instantiate(prefab, soul.mTransform.position + offset, Quaternion.identity).GetComponent<GuidedMissile>().Initialize(soul.Data.damage * 3);
         }
         soul.Anime.Play("SKILL1");
         soul.Audio.clip = audioClip;
@@ -185,7 +185,7 @@ public class MagicianSkill2AttackState : MagicianSkill2State
         offset = new Vector3(soul.MoveData.lookAt * 1.5f, 1.1f, 0.0f);
         audioClip = Resources.Load<AudioClip>("Sound/Magician/Skill2/Charge");
         prefab = Resources.Load<GameObject>("Prefab/Projectile/MagicianSkill2Projectile");
-        GameObject.Instantiate(prefab, soul.mTransform.position + offset, Quaternion.identity).GetComponent<GuidedMissileFar>().Initailize(soul.Data.damage * 4, 1.0f + size);
+        GameObject.Instantiate(prefab, soul.mTransform.position + offset, Quaternion.identity).GetComponent<GuidedMissileFar>().Initialize(soul.Data.damage * 4, 1.0f + size);
         soul.Anime.Play("SKILL2ATTACK");
         soul.Audio.clip = audioClip;
         soul.Audio.Play();

@@ -28,7 +28,7 @@ public class GuidedMissileFar : MonoBehaviour
             Destroy(this.gameObject);
     }
 
-    public void Initailize(int damage, float size)
+    public void Initialize(int damage, float size)
     {
         this.damage = damage;
         this.transform.localScale *= size; 

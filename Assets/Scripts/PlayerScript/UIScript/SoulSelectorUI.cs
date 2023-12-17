@@ -33,7 +33,7 @@ public class SoulSelectorUI : MonoBehaviour
 
     }
 
-    public void Initailize(int index)
+    public void Initialize(int index)
     {
         this.index = index;
     }

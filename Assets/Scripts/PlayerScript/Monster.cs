@@ -25,7 +25,7 @@ public class Monster : MonoBehaviour
         if(time>1.0f)
         {
             GameObject obj = Object.Instantiate(projectile, this.transform.position + new Vector3(1.0f, 0.0f, 0.0f), Quaternion.identity);
-            obj.GetComponent<Projectile>().Initailize(1.0f, new Vector2(1, 0), 5.0f, 50);
+            obj.GetComponent<Projectile>().Initialize(1.0f, new Vector2(1, 0), 5.0f, 50);
             time = 0.0f;
         }
     }

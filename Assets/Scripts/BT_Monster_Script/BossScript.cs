@@ -29,8 +29,9 @@ public class BossScript : MonoBehaviour
     {
         data = new EnemyData();
         data.hp = 1000;
-        data.moveSpeed = 4.0f;
+        data.moveSpeed = 30.0f;
         data.lookAt = GetComponent<SpriteRenderer>().flipX ? 1.0f : -1.0f;
+        data.target = null;
         Instantiate(UIPrefab, canvas.transform).GetComponent<EnemyUI>().Initialze("Boss");
     }
     void Start()
@@ -46,25 +47,28 @@ public class BossScript : MonoBehaviour
                     {
                         new BTConditionalDecoratorNode(action.gotATarget, eAbortType.BOTH,
                             new BTConditionalDecoratorNode(action.IsTargetWithinDetectionRange, eAbortType.SELF,
-                                new BTSequenceNode
-                                (
-                                    new List<BTNode>()
-                                    {
-                                        new BTActionNode(action.ChangeToIdleAnimation),
-                                        new BTActionNode(action.Wait),
-/*                                        new BTSelectorNode
+
+                                        new BTSelectorNode
                                         (
                                             new List<BTNode>()
                                             {
-                                                new BTConditionalDecoratorNode(action.Condition, eAbortType.LOWPRIORITY,
-                                                    new BTActionNode(action.Print)
+                                                new BTConditionalDecoratorNode(action.IsWithinAttackRange, eAbortType.BOTH,
+                                                    new BTActionNode(action.ChangeToAttackAnimation)
                                                 ),
-                                                new BTActionNode(action.Print)
+                                                new BTSequenceNode
+                                                (
+                                                    new List<BTNode>()
+                                                    {
+                                                        new BTActionNode(action.ChangeToWalkAnimation),
+                                                        new BTLoopNode
+                                                        (
+                                                            new BTActionNode(action.MoveToTarget)
+                                                        )
+                                                        
+                                                    }
+                                                )
                                             }
-                                        ),
-                                        new BTActionNode(action.Wait)*/
-                                    }
-                                )
+                                        )
                             )
                         ),
                         new BTSelectorNode
@@ -85,7 +89,7 @@ public class BossScript : MonoBehaviour
                                             (
                                                 new List<BTNode>
                                                 {
-                                                new BTActionNode(action.DetectTarget),
+                                                new BTActionNode(action.FindTarget),
                                                 new BTActionNode(action.MoveForward)
                                                 }
                                             )
@@ -93,12 +97,12 @@ public class BossScript : MonoBehaviour
                                     }
                                 )
                             }
-                        ) 
+                        )
                     }
                 )
             )
         );
-        bt.Initailize();
+        bt.Initialize();
     }
 
     // Update is called once per frame
@@ -129,6 +133,7 @@ public class BossAction
     public Animator Anime { get { return animator; } set { animator = value; } }
     protected AudioSource audioSource;
     public AudioSource Audio { get { return audioSource; } set { audioSource = value; } }
+    private int count = 0;
     public BossAction(EnemyData data, Collider2D collider, Rigidbody2D rigid, Transform transform, SpriteRenderer sprite, Animator anime, AudioSource audioSource)
     {
         this.data = data;
@@ -140,7 +145,7 @@ public class BossAction
         this.audioSource = audioSource;
     }
     private float time = 0.0f;
-
+    
     public eNodeState Wait()
     {
         time += Time.deltaTime;
@@ -151,6 +156,8 @@ public class BossAction
         return eNodeState.SUCCESS;
     }
 
+    public float skillRange;
+
     public bool gotATarget()
     {
         if (data.target == null) return false;
@@ -159,7 +166,7 @@ public class BossAction
 
     public bool IsTargetWithinDetectionRange()
     {
-        if(Vector2.Distance(data.target.transform.position, this.transform.position) > 30.0f)
+        if (Vector2.Distance(data.target.transform.position, this.transform.position) > 15.0f)
         {
             data.target = null;
             return false;
@@ -179,6 +186,15 @@ public class BossAction
         return false;
     }
 
+    public bool IsWithinAttackRange()
+    {
+        if(Vector2.Distance(new Vector2(data.target.transform.position.x, 0.0f), new Vector2(this.transform.position.x,0.0f)) < 5.0f)
+        {
+            return true;
+        }
+        return false;
+    }
+
     public eNodeState ChangeDirection()
     {
         sprite.flipX = !sprite.flipX;
@@ -186,21 +202,37 @@ public class BossAction
         return eNodeState.SUCCESS;
     }
 
-    public eNodeState DetectTarget()
+    public eNodeState FindTarget()
     {
+        count++;
+        if (count % 10 != 0)
+        {
+            return eNodeState.SUCCESS;
+        }
         RaycastHit2D hit = Physics2D.BoxCast(this.transform.position + new Vector3(0, 5, 0), new Vector2(20.0f, 10.0f), 0, Vector2.up, 0, 8);
         if (hit.collider != null)
         {
             data.target = hit.collider.GetComponent<PlayerController>();
             //Debug.Log("Å¸°ÙÀ» Ã£À½");
         }
+        count = 0;
         return eNodeState.SUCCESS;
     }
 
     public eNodeState MoveForward()
     {
-        this.transform.position = Vector2.MoveTowards(this.transform.position, this.transform.position + new Vector3(data.lookAt * data.moveSpeed * Time.fixedDeltaTime, 0, 0), 0.8f);
+        transform.Translate(new Vector3(data.lookAt * data.moveSpeed * Time.deltaTime, 0.0f, 0.0f));
         return eNodeState.SUCCESS;
+    }
+
+    public eNodeState MoveToTarget()
+    {
+        data.lookAt = ((data.target.transform.position.x - this.transform.position.x) > 0.0f) ? 1.0f : -1.0f;
+        sprite.flipX = (data.lookAt > 0.0f) ? true : false;
+        this.transform.position = Vector2.MoveTowards(this.transform.position, this.transform.position + new Vector3(0.1f * Time.deltaTime * data.moveSpeed * data.lookAt, 0.0f,0.0f),  0.8f);
+        //if(this.transform.position.x == data.target.transform.position.x)
+        return eNodeState.SUCCESS;
+        //return eNodeState.RUNNING;
     }
 
     public eNodeState ChangeToIdleAnimation()
@@ -212,6 +244,12 @@ public class BossAction
     public eNodeState ChangeToWalkAnimation()
     {
         animator.Play("WALK");
+        return eNodeState.SUCCESS;
+    }
+
+    public eNodeState ChangeToAttackAnimation()
+    {
+        animator.Play("ATTACK");
         return eNodeState.SUCCESS;
     }
 }

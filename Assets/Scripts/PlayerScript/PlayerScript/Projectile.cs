@@ -30,7 +30,7 @@ public class Projectile : MonoBehaviour
         transform.Translate(Vector3.right * lookAt * speed * Time.fixedDeltaTime);
     }
 
-    public void Initailize(float lookAt, Vector2 direction, float distance, float damage)
+    public void Initialize(float lookAt, Vector2 direction, float distance, float damage)
     {
         this.distance = distance;
         this.damage = (int)damage;

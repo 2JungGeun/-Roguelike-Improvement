@@ -258,7 +258,7 @@ public class SoldierSkillAttackState : SoldierSkillState
     private void createProjectile(Soul soul, Gun gun)
     {
         GameObject obj = Object.Instantiate(gun.prefab, gun.gun.transform.GetChild(0).position, gun.gun.transform.rotation);
-        obj.GetComponent<Projectile>().Initailize(soul.MoveData.lookAt, gun.direction, soul.Data.range, soul.Data.damage);
+        obj.GetComponent<Projectile>().Initialize(soul.MoveData.lookAt, gun.direction, soul.Data.range, soul.Data.damage);
     }
 }
 

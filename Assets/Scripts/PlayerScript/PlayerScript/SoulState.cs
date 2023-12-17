@@ -115,10 +115,11 @@ abstract public class WalkState : SoulState
                 break;
         }
         soul.MoveData.lookAt = (soul.Sprite.flipX) ? -1 : 1;
+        soul.mTransform.position = Vector2.MoveTowards(soul.mTransform.position, soul.mTransform.position + new Vector3(input.moveDir * soul.Data.speed * Time.deltaTime, 0, 0), 0.8f);
     }
     public override void fixedUpdate(Soul soul, InputManager input)
     {
-        soul.mTransform.position = Vector2.MoveTowards(soul.mTransform.position, soul.mTransform.position + new Vector3(input.moveDir * soul.Data.speed * Time.fixedDeltaTime, 0, 0), 0.8f);
+        
     }
 
     public override void end(Soul soul, InputManager input)
@@ -179,10 +180,11 @@ abstract public class JumpState : SoulState
                 break;
         }
         soul.MoveData.lookAt = (soul.Sprite.flipX) ? -1 : 1;
+        soul.mTransform.position = Vector2.MoveTowards(soul.mTransform.position, soul.mTransform.position + new Vector3(input.moveDir * soul.Data.speed * Time.deltaTime, 0, 0), 0.8f);
     }
     override public void fixedUpdate(Soul soul, InputManager input)
     {
-        soul.mTransform.position = Vector2.MoveTowards(soul.mTransform.position, soul.mTransform.position + new Vector3(input.moveDir * soul.Data.speed * Time.fixedDeltaTime, 0, 0), 0.8f);
+        
     }
 
     override public void end(Soul soul, InputManager input) { }
@@ -249,11 +251,12 @@ abstract public class FallState : SoulState
                 break;
         }
         soul.MoveData.lookAt = (soul.Sprite.flipX) ? -1 : 1;
+        soul.mTransform.position = Vector2.MoveTowards(soul.mTransform.position, soul.mTransform.position + new Vector3(input.moveDir * soul.Data.speed * Time.deltaTime, 0, 0), 0.8f);
     }
 
     public override void fixedUpdate(Soul soul, InputManager input)
     {
-        soul.mTransform.position = Vector2.MoveTowards(soul.mTransform.position, soul.mTransform.position + new Vector3(input.moveDir * soul.Data.speed * Time.fixedDeltaTime, 0, 0), 0.8f);
+        
     }
 
     public override void end(Soul soul, InputManager input)
@@ -292,12 +295,13 @@ abstract public class DashState : SoulState
     override public void update(Soul soul, InputManager input)
     {
         dashTime += Time.deltaTime;
+        soul.mTransform.position = Vector2.MoveTowards(soul.mTransform.position, soul.mTransform.position + new Vector3(soul.MoveData.lookAt * soul.MoveData.dashDistance * Time.deltaTime, 0, 0), 0.8f);
     }
 
     public override void fixedUpdate(Soul soul, InputManager input)
     {
         //soul.Rigid.velocity = new Vector2(soul.Rigid.velocity.x, 0.0f);
-        soul.mTransform.position = Vector2.MoveTowards(soul.mTransform.position, soul.mTransform.position + new Vector3(soul.MoveData.lookAt * soul.MoveData.dashDistance * Time.fixedDeltaTime, 0, 0), 0.8f);
+        
     }
 
     override public void end(Soul soul, InputManager input)
@@ -476,7 +480,7 @@ abstract public class RangedGroundBasicAttackState : GroundBasicAttackState
     protected bool createProjectile(Soul soul, int index)
     {
         GameObject obj = Object.Instantiate(projectile[index], soul.mTransform.position + new Vector3(soul.MoveData.lookAt * soul.Collider.bounds.size.x, soul.Collider.offset.y, 0.0f), Quaternion.identity);
-        obj.GetComponent<Projectile>().Initailize(soul.MoveData.lookAt, direction, soul.Data.range, soul.Data.damage);
+        obj.GetComponent<Projectile>().Initialize(soul.MoveData.lookAt, direction, soul.Data.range, soul.Data.damage);
         return true;
     }
 }
@@ -502,7 +506,7 @@ abstract public class RangedAirBasicAttackState : AirBasicAttackState
     private bool createProjectile(Soul soul)
     {
         GameObject obj = Object.Instantiate(projectile, soul.mTransform.position + new Vector3(soul.MoveData.lookAt * soul.Collider.bounds.size.x, soul.Collider.offset.y, 0.0f), Quaternion.identity);
-        obj.GetComponent<Projectile>().Initailize(soul.MoveData.lookAt, direction, soul.Data.range, soul.Data.damage);
+        obj.GetComponent<Projectile>().Initialize(soul.MoveData.lookAt, direction, soul.Data.range, soul.Data.damage);
         return true;
     }
 }

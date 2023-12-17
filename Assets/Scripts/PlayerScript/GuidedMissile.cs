@@ -34,7 +34,7 @@ public class GuidedMissile : MonoBehaviour
         }
     }
 
-    public void Initailize(int damage)
+    public void Initialize(int damage)
     {
         this.damage = damage;
     }

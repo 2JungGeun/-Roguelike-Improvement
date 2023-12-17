@@ -16,7 +16,7 @@ public class StatueUI : MonoBehaviour
         for(int i = 0; i < UIManager.GetUIManager().SoulSeclectorUINum; i++)
         {
             soulSelectorUI.Add(Instantiate(UIprefab, parents) as GameObject);
-            soulSelectorUI[i].GetComponent<SoulSelectorUI>().Initailize(i);
+            soulSelectorUI[i].GetComponent<SoulSelectorUI>().Initialize(i);
         }
     }
     public void Initialize(Statue statue)
