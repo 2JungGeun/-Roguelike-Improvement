@@ -597,7 +597,7 @@ public class DeadState : SoulState
 
     public override SoulState handleInput(Soul soul, InputManager input)
     {
-        if (1.5f <= time)
+        if (4.0f <= time)
             innerState = State.IDLE;
         return soul.StateChanger(innerState);
     }
@@ -608,12 +608,6 @@ public class DeadState : SoulState
     public override void end(Soul soul, InputManager input)
     {
         Object.Destroy(dead);
-        SceneManager.LoadScene("Test1");
-        respawn();
-    }
-
-    private void respawn()
-    {
-
+        SceneManager.LoadScene("SampleScene");
     }
 }

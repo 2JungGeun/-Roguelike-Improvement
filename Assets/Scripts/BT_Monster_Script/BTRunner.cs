@@ -17,9 +17,14 @@ public class BTRunner
         root.Initialize(ref nodeCount, null, root);
         Debug.Log("Print Node Count : " + nodeCount);
     }
-    public void Tick()
+    public bool Tick()
     {
         root.CheckConditions();
         root.RunningNode.Tick();
+        if(root.RunningNode.Priority == 0 && !root.IsAbort)
+        {
+            return true;
+        }
+        return false;
     }
 }

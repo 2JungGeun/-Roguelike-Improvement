@@ -44,7 +44,8 @@ namespace BT
         private List<BTConditionalDecoratorNode> conditionNodes;
         private int abortNodePrioriy;
         public int AbortNodePrioriy { get { return abortNodePrioriy; } }
-        public bool isAbort = false;
+        private bool isAbort = false;
+        public bool IsAbort { get { return isAbort; } }
         private BTNode runningNode;
         public BTNode RunningNode { get { return runningNode; } set { runningNode = value; } }
         private BTNode child;
@@ -65,11 +66,9 @@ namespace BT
         {
             CheckInnerState();
             runningNode = child;
-            //Debug.Log("root tick" + priority);
         }
         protected override void CheckInnerState()
         {
-            Debug.Log("root func" + priority);
         }
         protected override void CanceledByConditionalAborts() { }
         public void CheckConditions()
@@ -91,11 +90,11 @@ namespace BT
                         if (isConditionChanged(i)) return;
                         break;
                     case eAbortType.BOTH:
-                        if(conditionNodes[i].ParaentNode.LastChildPrioriy > runningNode.Priority)
+                        if(conditionNodes[i].ParaentNode.LastChildPrioriy >= runningNode.Priority)
                             if (isConditionChanged(i)) return;
                         break;
                     case eAbortType.LOWPRIORITY:
-                        if (runningNode.Priority > conditionNodes[i].LastChildPrioriy && conditionNodes[i].ParaentNode.LastChildPrioriy > runningNode.Priority)
+                        if (runningNode.Priority > conditionNodes[i].LastChildPrioriy && conditionNodes[i].ParaentNode.LastChildPrioriy >= runningNode.Priority)
                             if (isConditionChanged(i)) return;
                         break;
                 }           
@@ -108,7 +107,7 @@ namespace BT
             {
                 isAbort = true;
                 abortNodePrioriy = conditionNodes[index].Priority;
-                Debug.Log("---------------------------------------Assert------------------------------------------" + conditionNodes.Count);
+                Debug.Log("---------------------------------------Assert------------------------------------------" + conditionNodes[index].Priority);
                 return true;
             }
             return false;
@@ -140,17 +139,19 @@ namespace BT
                 case eNodeState.SUCCESS:
                 case eNodeState.FAILURE:
                 case eNodeState.CANCLE:
-                    Debug.Log("Action tick" + priority + "/" + lastChildPrioriy);
+                    //Debug.Log("Action tick" + priority + "/" + lastChildPrioriy);
                     root.RunningNode = parentNode;
                     break;
                 case eNodeState.RUNNING:
+                    //Debug.Log("Action tick" + priority + "/" + lastChildPrioriy);
+                    break;
                 default:
                     break;
             }
         }
         protected override void CheckInnerState()
         {
-            if (root.isAbort)
+            if (root.IsAbort)
             {
                 state = eNodeState.CANCLE;
                 return;
@@ -202,7 +203,7 @@ namespace BT
             {
                 case eNodeState.RUNNING:
                     condition = tick?.Invoke() ?? false;
-                    Debug.Log("conditonNode " + priority + "/" + lastChildPrioriy);
+                    //Debug.Log("conditonNode " + priority + "/" + lastChildPrioriy);
                     if (!condition)
                     {
                         root.RunningNode = parentNode;
@@ -224,7 +225,7 @@ namespace BT
         }
         protected override void CheckInnerState()
         {
-            if (root.isAbort)
+            if (root.IsAbort)
             {
                 state = eNodeState.CANCLE;
                 return;
@@ -270,7 +271,7 @@ namespace BT
         }
         protected override void CheckInnerState()
         {
-            if (root.isAbort)
+            if (root.IsAbort)
             {
                 state = eNodeState.CANCLE;
             }
@@ -331,7 +332,7 @@ namespace BT
         }
         protected bool CheckCancleAndRunning()
         {
-            if (root.isAbort)
+            if (root.IsAbort)
             {
                 state = eNodeState.CANCLE;
                 return true;
@@ -351,7 +352,7 @@ namespace BT
         public override void Tick()
         {
             CheckInnerState();
-            Debug.Log("Sequence tick" + priority + "/" + lastChildPrioriy);
+            //Debug.Log("Sequence tick" + priority + "/" + lastChildPrioriy);
             switch (state)
             {
                 case eNodeState.RUNNING:
@@ -395,7 +396,7 @@ namespace BT
         public override void Tick()
         {
             CheckInnerState();
-            Debug.Log("Selector tick" + priority + "/" + lastChildPrioriy);
+            //Debug.Log("Selector tick" + priority + "/" + lastChildPrioriy);
             switch (state)
             {
                 case eNodeState.RUNNING:

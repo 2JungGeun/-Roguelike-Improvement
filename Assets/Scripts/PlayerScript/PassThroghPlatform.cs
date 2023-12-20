@@ -7,6 +7,7 @@ public enum Layer
 {
     Default = 1,
     Player = 8,
+    Ground = 64,
     Monster = 128
 }
 

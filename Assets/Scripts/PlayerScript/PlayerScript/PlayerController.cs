@@ -98,7 +98,6 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         ownSouls = new List<Soul>();
-        //base ĳ���� �ʱ�ȭ
         InitializeSoul();
     }
 
@@ -264,11 +263,6 @@ public class PlayerController : MonoBehaviour
         {
             currSoul.Hit(input);
         }
-        else
-        {
-            currSoul.Dead(input);
-        }
-
     }
 
     public void GetMoney(int money)
@@ -293,6 +287,8 @@ public class PlayerController : MonoBehaviour
     private void Death()
     {
         if (playerData.hp <= 0 || playerData.intellectuality <= 0)
+        {
             currSoul.Dead(input);
+        }
     }
 }
