@@ -31,7 +31,7 @@ public class SoldierBeam : MonoBehaviour
         {
             foreach (RaycastHit2D hit in hits)
             {
-                hit.collider.GetComponent<BossScript>().Hit(damage);
+                hit.collider.GetComponent<IMonster>().Hit(damage);
             }
          }
         StopCoroutine("hitBox");

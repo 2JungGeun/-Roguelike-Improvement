@@ -67,10 +67,10 @@ public class PlayerUI : MonoBehaviour
 
     public void OnSkillCooldownNotify()
     {
-        if (subject.CurrSoul.Skills[KeyCode.X].CurrTime != 0.0f)
+        if (subject.CurrSoul.Skills[KeyAction.FIRST_SKILL].CurrTime != 0.0f)
         {
             skill1Text.gameObject.SetActive(true);
-            skill1Text.text = (subject.CurrSoul.Skills[KeyCode.X].Cooldown - subject.CurrSoul.Skills[KeyCode.X].CurrTime).ToString("F1");
+            skill1Text.text = (subject.CurrSoul.Skills[KeyAction.FIRST_SKILL].Cooldown - subject.CurrSoul.Skills[KeyAction.FIRST_SKILL].CurrTime).ToString("F1");
             SkillIcon1.GetComponent<Image>().color = new Color(1.0f, 1.0f, 1.0f, 0.3f);
         }
         else
@@ -79,10 +79,10 @@ public class PlayerUI : MonoBehaviour
             SkillIcon1.GetComponent<Image>().color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
             skill1Text.gameObject.SetActive(false);
         }
-        if (subject.CurrSoul.Skills[KeyCode.C].CurrTime != 0.0f)
+        if (subject.CurrSoul.Skills[KeyAction.SECOND_SKILL].CurrTime != 0.0f)
         {
             skill2Text.gameObject.SetActive(true);
-            skill2Text.text = (subject.CurrSoul.Skills[KeyCode.C].Cooldown - subject.CurrSoul.Skills[KeyCode.C].CurrTime).ToString("F1");
+            skill2Text.text = (subject.CurrSoul.Skills[KeyAction.SECOND_SKILL].Cooldown - subject.CurrSoul.Skills[KeyAction.SECOND_SKILL].CurrTime).ToString("F1");
             SkillIcon2.GetComponent<Image>().color = new Color(1.0f, 1.0f, 1.0f, 0.3f);
         }
         else

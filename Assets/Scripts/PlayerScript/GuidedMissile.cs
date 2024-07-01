@@ -69,7 +69,7 @@ public class GuidedMissile : MonoBehaviour
     {
         if(collision.CompareTag("Enemy"))
         {
-            collision.GetComponent<BossScript>().Hit(this.damage);
+            collision.GetComponent<IMonster>().Hit(this.damage);
             Destroy(this.gameObject);
         }
     }

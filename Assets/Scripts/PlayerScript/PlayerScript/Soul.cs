@@ -67,6 +67,7 @@ public class MovementData
         this.jumpCount = 0;
         this.dashDistance = 20.0f;
         this.dashTime = 0.3f;
+        this.lookAt = 1;
     }
 }
 
@@ -116,8 +117,8 @@ public abstract class Soul {
     protected SoulState state;
     public SoulState soulState { get { return state; } }
     //soul Skill
-    protected Dictionary<KeyCode, Skill> skills = new Dictionary<KeyCode, Skill>();
-    public Dictionary<KeyCode, Skill> Skills { get { return skills; } }
+    protected Dictionary<KeyAction, Skill> skills = new Dictionary<KeyAction, Skill>();
+    public Dictionary<KeyAction, Skill> Skills { get { return skills; } }
 
     //Skill 쿨타임
     protected CooldownTime cooldownTime = new CooldownTime();
@@ -138,8 +139,8 @@ public abstract class Soul {
 
     public Soul(string name)
     {
-        this.data = DataManager.Instance().SoulDataDic[name].Deepcopy();
-        controller = GameObject.Find("Player").GetComponent<PlayerController>();
+        this.data = DataManager.Instance.SoulDataDic[name].Deepcopy();
+        controller = GameObject.Find("Player").GetComponent<PlayerController>();//멀티게임으로 변환시 문제발생
     }
 
     public void Initialize(Collider2D collider, Rigidbody2D rigid, Transform transform, SpriteRenderer sprite, Animator anime, AudioSource audioSource)
@@ -153,11 +154,11 @@ public abstract class Soul {
         this.isOnGround = false;
     }
 
-    public abstract void Start(InputManager input);
+    public abstract void Start(KeyAction input);
 
-    public virtual void Update(InputManager input)
+    public virtual void Update(KeyAction input)
     {
-        foreach (KeyValuePair<KeyCode, Skill> skill in Skills)
+        foreach (KeyValuePair<KeyAction, Skill> skill in Skills)
         {
             skill.Value.ColldownUpdate();
         }
@@ -173,10 +174,10 @@ public abstract class Soul {
         }
     }
 
-    public abstract void FixedUpdate(InputManager input);
+    public abstract void FixedUpdate(KeyAction input);
 
     //상태머신 변경 처리
-    public void HandleInput(InputManager input)
+    public void HandleInput(KeyAction input)
     {
         SoulState state = this.state.handleInput(this, input);
         if (state != null)
@@ -187,19 +188,19 @@ public abstract class Soul {
         }
     }
 
-    public abstract void SwapingSoul(InputManager input);
+    public abstract void SwapingSoul(KeyAction input);
 
     //SoulState를 상속받아 stateChanger를 오버라이드한 모든 클래스에서 중복되는 조건탐색이 있어 중복코드 방지용 함수
     public abstract SoulState StateChanger(State innerState);
 
-    public void Hit(InputManager input)
+    public void Hit(KeyAction input)
     {
         this.state.end(this, input);
         this.state = new HitState();
         this.state.start(this, input);
     }
 
-    public void Dead(InputManager input)
+    public void Dead(KeyAction input)
     {
         this.state.end(this, input);
         this.state = new DeadState();
@@ -226,8 +227,12 @@ public abstract class Soul {
 
     public void UseCost(int cost)
     {
-        Debug.Log("코스트 소모");
         controller.PlayerData.UseIntellectuality(cost);
         controller.HealthEventHandler();
+    }
+
+    public int GetIntellectuality()
+    {
+        return controller.PlayerData.intellectuality;
     }
 }

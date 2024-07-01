@@ -192,7 +192,7 @@ GameObject:
   - component: {fileID: 81799091}
   - component: {fileID: 81799090}
   - component: {fileID: 81799094}
-  - component: {fileID: 81799093}
+  - component: {fileID: 81799095}
   m_Layer: 7
   m_Name: Capsule (6)
   m_TagString: Enemy
@@ -283,19 +283,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 22
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &81799093
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 81799088}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25cb38c4dd7ddb6429fc98c2cfa51e5d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyhp: 0
 --- !u!50 &81799094
 Rigidbody2D:
   serializedVersion: 4
@@ -317,6 +304,18 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &81799095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 81799088}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a3b6b8124031cb4cbe9389bc4d9590f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &127440222
 GameObject:
   m_ObjectHideFlags: 0
@@ -1600,7 +1599,7 @@ GameObject:
   - component: {fileID: 646638391}
   - component: {fileID: 646638390}
   - component: {fileID: 646638394}
-  - component: {fileID: 646638393}
+  - component: {fileID: 646638395}
   m_Layer: 7
   m_Name: Capsule (3)
   m_TagString: Enemy
@@ -1691,19 +1690,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 19
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &646638393
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 646638388}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25cb38c4dd7ddb6429fc98c2cfa51e5d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyhp: 0
 --- !u!50 &646638394
 Rigidbody2D:
   serializedVersion: 4
@@ -1725,6 +1711,18 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &646638395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 646638388}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a3b6b8124031cb4cbe9389bc4d9590f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &666782760
 GameObject:
   m_ObjectHideFlags: 0
@@ -1737,7 +1735,7 @@ GameObject:
   - component: {fileID: 666782763}
   - component: {fileID: 666782762}
   - component: {fileID: 666782766}
-  - component: {fileID: 666782765}
+  - component: {fileID: 666782767}
   m_Layer: 7
   m_Name: Capsule (5)
   m_TagString: Enemy
@@ -1828,19 +1826,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 21
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &666782765
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 666782760}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25cb38c4dd7ddb6429fc98c2cfa51e5d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyhp: 0
 --- !u!50 &666782766
 Rigidbody2D:
   serializedVersion: 4
@@ -1862,6 +1847,18 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &666782767
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 666782760}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a3b6b8124031cb4cbe9389bc4d9590f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &673948975
 GameObject:
   m_ObjectHideFlags: 0
@@ -2311,7 +2308,7 @@ GameObject:
   - component: {fileID: 746783896}
   - component: {fileID: 746783895}
   - component: {fileID: 746783899}
-  - component: {fileID: 746783898}
+  - component: {fileID: 746783900}
   m_Layer: 7
   m_Name: Capsule (4)
   m_TagString: Enemy
@@ -2402,19 +2399,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 20
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &746783898
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 746783893}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25cb38c4dd7ddb6429fc98c2cfa51e5d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyhp: 0
 --- !u!50 &746783899
 Rigidbody2D:
   serializedVersion: 4
@@ -2436,6 +2420,18 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &746783900
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 746783893}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a3b6b8124031cb4cbe9389bc4d9590f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &806196775
 GameObject:
   m_ObjectHideFlags: 0
@@ -2524,7 +2520,7 @@ GameObject:
   - component: {fileID: 837839980}
   - component: {fileID: 837839979}
   - component: {fileID: 837839983}
-  - component: {fileID: 837839982}
+  - component: {fileID: 837839984}
   m_Layer: 7
   m_Name: Capsule (2)
   m_TagString: Enemy
@@ -2615,19 +2611,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &837839982
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 837839977}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25cb38c4dd7ddb6429fc98c2cfa51e5d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyhp: 0
 --- !u!50 &837839983
 Rigidbody2D:
   serializedVersion: 4
@@ -2649,6 +2632,18 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &837839984
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 837839977}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a3b6b8124031cb4cbe9389bc4d9590f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &887618096
 GameObject:
   m_ObjectHideFlags: 0
@@ -2661,7 +2656,7 @@ GameObject:
   - component: {fileID: 887618099}
   - component: {fileID: 887618098}
   - component: {fileID: 887618102}
-  - component: {fileID: 887618101}
+  - component: {fileID: 887618103}
   m_Layer: 7
   m_Name: Capsule (8)
   m_TagString: Enemy
@@ -2752,19 +2747,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 24
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &887618101
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 887618096}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25cb38c4dd7ddb6429fc98c2cfa51e5d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyhp: 0
 --- !u!50 &887618102
 Rigidbody2D:
   serializedVersion: 4
@@ -2786,6 +2768,18 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &887618103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 887618096}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a3b6b8124031cb4cbe9389bc4d9590f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &917032159
 GameObject:
   m_ObjectHideFlags: 0
@@ -3406,7 +3400,7 @@ GameObject:
   - component: {fileID: 1172682641}
   - component: {fileID: 1172682640}
   - component: {fileID: 1172682644}
-  - component: {fileID: 1172682643}
+  - component: {fileID: 1172682645}
   m_Layer: 7
   m_Name: Capsule (1)
   m_TagString: Enemy
@@ -3497,19 +3491,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1172682643
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1172682638}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25cb38c4dd7ddb6429fc98c2cfa51e5d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyhp: 0
 --- !u!50 &1172682644
 Rigidbody2D:
   serializedVersion: 4
@@ -3531,6 +3512,18 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &1172682645
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1172682638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a3b6b8124031cb4cbe9389bc4d9590f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1202360380
 GameObject:
   m_ObjectHideFlags: 0
@@ -3619,7 +3612,7 @@ GameObject:
   - component: {fileID: 1204398427}
   - component: {fileID: 1204398426}
   - component: {fileID: 1204398430}
-  - component: {fileID: 1204398429}
+  - component: {fileID: 1204398431}
   m_Layer: 7
   m_Name: Capsule (7)
   m_TagString: Enemy
@@ -3710,19 +3703,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 23
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1204398429
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1204398424}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25cb38c4dd7ddb6429fc98c2cfa51e5d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyhp: 0
 --- !u!50 &1204398430
 Rigidbody2D:
   serializedVersion: 4
@@ -3744,6 +3724,18 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &1204398431
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1204398424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a3b6b8124031cb4cbe9389bc4d9590f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1211702969
 GameObject:
   m_ObjectHideFlags: 0

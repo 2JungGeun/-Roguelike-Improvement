@@ -10,31 +10,100 @@ public enum DamageType
     INTELLECTUALITY
 }
 
-public class InputManager
+public enum KeyAction
 {
-    public float moveDir;
-    public bool isJumpKeyDown;
-    public bool isDownJumpKeyDown;
-    public bool isDashKeyDown;
-    public bool isAttackKeyDown;
-    public (bool, KeyCode) isSkillKeyDown;
-    public InputManager()
+    NONE,
+    LEFTMOVE,
+    RIGHTMOVE,
+    JUMP,
+    DONWJUMP,
+    DASH,
+    BASIC_ATTACK,
+    FIRST_SKILL,
+    SECOND_SKILL,
+    SOULSWAP,
+    KEYCOUNT
+}
+
+public class KeySetting
+{
+    private Dictionary<KeyAction, KeyCode> keys = new Dictionary<KeyAction, KeyCode>();
+    public Dictionary<KeyAction, KeyCode> Keys { get { return keys; } }
+
+    public KeySetting()
     {
-        moveDir = 0.0f;
-        isJumpKeyDown = false;
-        isDownJumpKeyDown = false;
-        isDashKeyDown = false;
-        isAttackKeyDown = false;
-        isSkillKeyDown = (false, KeyCode.None);
+        KeyCode[] keyCodes = new KeyCode[] { KeyCode.LeftArrow, KeyCode.RightArrow, KeyCode.Space, KeyCode.DownArrow, KeyCode.LeftShift, KeyCode.Z, KeyCode.X, KeyCode.C, KeyCode.Tab };
+        for (int i = 1; i < (int)KeyAction.KEYCOUNT; i++)
+        {
+            keys.Add((KeyAction)i, keyCodes[i-1]);
+        }
     }
-    public void reset()
+
+    public bool ModifyKey(KeyAction key, KeyCode value)
     {
-        moveDir = 0.0f;
-        isJumpKeyDown = false;
-        isDownJumpKeyDown = false;
-        isDashKeyDown = false;
-        isAttackKeyDown = false;
-        isSkillKeyDown = (false, KeyCode.None);
+        foreach (KeyValuePair<KeyAction, KeyCode> kvp in keys)
+        {
+            if (kvp.Equals(value))
+            {
+                return false;
+            }
+        }
+        keys[key] = value;
+        return true;
+    }
+}
+
+public class InputHandle
+{
+    private KeySetting keySetting;
+
+    public InputHandle()
+    {
+        keySetting = new KeySetting();
+    }
+
+    public KeyAction Update()
+    {
+        if (Input.GetKeyDown(keySetting.Keys[KeyAction.JUMP]))
+        {
+            if (!Input.GetKey(keySetting.Keys[KeyAction.DONWJUMP]))
+            {
+                return KeyAction.JUMP;
+            }
+            else
+            {
+                return KeyAction.DONWJUMP;
+            }
+        }
+        else if (Input.GetKeyDown(keySetting.Keys[KeyAction.DASH]))
+        {
+            return KeyAction.DASH;
+        }
+        else if (Input.GetKeyDown(keySetting.Keys[KeyAction.SOULSWAP]))
+        {
+            return KeyAction.SOULSWAP;
+        }
+        else if (Input.GetKeyDown(keySetting.Keys[KeyAction.FIRST_SKILL]))
+        {
+            return KeyAction.FIRST_SKILL;
+        }
+        else if (Input.GetKeyDown(keySetting.Keys[KeyAction.SECOND_SKILL]))
+        {
+            return KeyAction.SECOND_SKILL;
+        }
+        else if (Input.GetKey(keySetting.Keys[KeyAction.BASIC_ATTACK]))
+        {
+            return KeyAction.BASIC_ATTACK;
+        }
+        else if (Input.GetKey(keySetting.Keys[KeyAction.LEFTMOVE]))
+        {
+            return KeyAction.LEFTMOVE;
+        }
+        else if (Input.GetKey(keySetting.Keys[KeyAction.RIGHTMOVE]))
+        {
+            return KeyAction.RIGHTMOVE;
+        }
+        return KeyAction.NONE;
     }
 }
 
@@ -65,7 +134,6 @@ public class PlayerData
 
 public class PlayerController : MonoBehaviour
 {
-
     public delegate void healthEventHandler();
     public healthEventHandler HealthEventHandler;
 
@@ -82,8 +150,8 @@ public class PlayerController : MonoBehaviour
     public PlayerData PlayerData { get { return playerData; } }
 
     //Input���� ����
-    private InputManager input = new InputManager();
-
+    private InputHandle hInput = new InputHandle();
+    private KeyAction keyAction = KeyAction.NONE;
     //soul
     private int currIndex = 0;
     public int MainIndex { get { return currIndex; } }
@@ -101,13 +169,15 @@ public class PlayerController : MonoBehaviour
         InitializeSoul();
     }
 
-    void Start()
+    private void Start()
     {
+        GameManager.Instance.CreateGame();
+        PacketManager.Instance.CreatePacket();
         HealthEventHandler += Death;
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (currSoul == null)
             return;
@@ -115,69 +185,39 @@ public class PlayerController : MonoBehaviour
         if (playerData.intellectuality < 100)
         {
             time += Time.deltaTime;
-            if (time >= 1.0f)
+            if (time >= 5.0f)
             {
                 time = 0.0f;
-                playerData.intellectuality += 2;
+                if (playerData.intellectuality <= 90)
+                    playerData.intellectuality += 10;
+                else
+                    playerData.intellectuality += 100 - playerData.intellectuality;
                 HealthEventHandler();
             }
         }
 
-        input.moveDir = Input.GetAxisRaw("Horizontal");
-        if (Input.GetButtonDown("Jump") && currSoul.MoveData.jumpCount < currSoul.Data.availableJumpCount)
-        {
-            if (!Input.GetKey(KeyCode.DownArrow))
-            {
-                input.isJumpKeyDown = true;
-            }
-            else
-            {
-                input.isDownJumpKeyDown = true;
-            }
-        }
-        else if (Input.GetKeyDown(KeyCode.LeftShift) && currSoul.mCooldownTime.dashCoolingdown && currSoul.Data.isUseDash)
-        {
-            input.isDashKeyDown = true;
-        }
-        else if (Input.GetKey(KeyCode.Z))
-        {
-            input.isAttackKeyDown = true;
-        }
-        else if (Input.GetKeyDown(KeyCode.Tab))
-        {
+        keyAction = hInput.Update();
+        if(keyAction == KeyAction.SOULSWAP)
             SwapSoul();
-        }
-        if (!input.isSkillKeyDown.Item1)
-        {
-            if (Input.GetKeyDown(KeyCode.X))
-            {
-                if (currSoul.Skills.ContainsKey(KeyCode.X) && currSoul.Skills[KeyCode.X].CanUseSkill(playerData.intellectuality))
-                    input.isSkillKeyDown = (true, KeyCode.X);
-            }
-            else if (Input.GetKeyDown(KeyCode.C))
-            {
-                if (currSoul.Skills.ContainsKey(KeyCode.C) && currSoul.Skills[KeyCode.C].CanUseSkill(playerData.intellectuality))
-                    input.isSkillKeyDown = (true, KeyCode.C);
-            }
-        }
+        SkillCooldownEventHandler();
+        currSoul.HandleInput(keyAction);
+        currSoul.Update(keyAction);
+        if (ownSouls.Count == 2)
+            ownSouls[subIndex].Update(keyAction);
+
         if (Input.GetKeyDown(KeyCode.M))
         {
             playerData.AddMoney(300);
             MoneyEventHandler();
         }
-        SkillCooldownEventHandler();
-        currSoul.HandleInput(input);
-        currSoul.Update(input);
-        if (ownSouls.Count == 2)
-            ownSouls[subIndex].Update(input);
     }
 
     private void FixedUpdate()
     {
-        currSoul.FixedUpdate(input);
+        currSoul.FixedUpdate(keyAction);
     }
 
-    public void InitializeSoul()
+    private void InitializeSoul()
     {
         object[] args = new object[] { "Knight" };
         Type t = Type.GetType("Knight");
@@ -187,13 +227,13 @@ public class PlayerController : MonoBehaviour
         this.GetComponent<Animator>().runtimeAnimatorController = Resources.Load("Animator/SoulAnimator/" + currSoul.Data.name + "_Anime") as RuntimeAnimatorController;
     }
 
-    public void SwapSoul()
+    private void SwapSoul()
     {
         if (currSoul.soulState.GetType() != Type.GetType(currSoul.Data.name + "IdleState"))
             return;
         if (ownSouls.Count == 2)
         {
-            currSoul.SwapingSoul(input);
+            currSoul.SwapingSoul(keyAction);
             switch (currIndex)
             {
                 case 0:
@@ -210,12 +250,11 @@ public class PlayerController : MonoBehaviour
             currSoul = ownSouls[currIndex];
             this.GetComponent<Animator>().runtimeAnimatorController = Resources.Load("Animator/SoulAnimator/" + currSoul.Data.name + "_Anime") as RuntimeAnimatorController;
             SoulSwapEventHandler();
-            input.reset();
-            currSoul.Start(input);
+            currSoul.Start(keyAction);
         }
     }
 
-    public void ModifySoul(string name, int selectedNum)
+    public void ModifySoul(string name)
     {
         if (ownSouls.Count == 1)
         {
@@ -261,7 +300,7 @@ public class PlayerController : MonoBehaviour
         HealthEventHandler();
         if (!isDead())
         {
-            currSoul.Hit(input);
+            currSoul.Hit(keyAction);
         }
     }
 
@@ -288,7 +327,7 @@ public class PlayerController : MonoBehaviour
     {
         if (playerData.hp <= 0 || playerData.intellectuality <= 0)
         {
-            currSoul.Dead(input);
+            currSoul.Dead(keyAction);
         }
     }
 }

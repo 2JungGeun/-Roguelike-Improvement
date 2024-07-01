@@ -14,7 +14,7 @@ public class SoldierDashState : DashState { }
 
 public class SoldierGroundBasicAttackState : RangedGroundBasicAttackState 
 {
-    public override void start(Soul soul, InputManager input)
+    public override void start(Soul soul,KeyAction input)
     {
         audioClip = Resources.Load<AudioClip>("Sound/Soldier/Attack/Attack");
         base.start(soul, input);
@@ -35,7 +35,7 @@ public class SoldierGroundBasicAttackState : RangedGroundBasicAttackState
         }
         createProjectile(soul, projectileIndex);
     }
-    public override void update(Soul soul, InputManager input)
+    public override void update(Soul soul, KeyAction input)
     {
         time += Time.deltaTime;
         switch (soul.AttackCount)
@@ -58,7 +58,7 @@ public class SoldierGroundBasicAttackState : RangedGroundBasicAttackState
 
 public class SoldierAirBasicAttackState : RangedAirBasicAttackState
 {
-    public override void start(Soul soul, InputManager input)
+    public override void start(Soul soul, KeyAction input)
     {
         audioClip = Resources.Load<AudioClip>("Sound/Soldier/Attack/Attack");
         base.start(soul, input);
@@ -97,7 +97,7 @@ public class SoldierSkill1 : Skill
 
     }
 
-    public override void start(InputManager input)
+    public override void start(KeyAction input)
     {
         base.start(input);
         soul.Anime.Play("SKILL1PREPARE");
@@ -111,12 +111,12 @@ public class SoldierSkill1 : Skill
         gunSoldierState.start(soul, gun);
     }
 
-    public override State handleInput(InputManager input)
+    public override State handleInput(KeyAction input)
     {
         if (Input.GetKeyDown(KeyCode.X))
         {
             isSkillAvailable = false;
-            input.reset();
+            //input.reset();
             return State.IDLE;
         }
         if (gunSoldierState.handleInput(soul, gun) != null)
@@ -128,17 +128,17 @@ public class SoldierSkill1 : Skill
         return State.NULL;
     }
 
-    public override void fixedUpdate(InputManager input)
+    public override void fixedUpdate(KeyAction input)
     {
         gunSoldierState.fixedUpdate(soul, gun);
     }
 
-    public override void update(InputManager input)
+    public override void update(KeyAction input)
     {
         gunSoldierState.update(soul, gun);
     }
 
-    public override void end(InputManager input)
+    public override void end(KeyAction input)
     {
         isSkillAvailable = false;
         gunSoldierState = null;
@@ -289,7 +289,7 @@ public class SoldierSkill2 : Skill
         audioClip = Resources.Load<AudioClip>("Sound/Soldier/Skill/Beam");
         time = 0.0f;
     }
-    public override void start(InputManager input)
+    public override void start(KeyAction input)
     {
         base.start(input);
         isSkillAvailable = false;
@@ -300,14 +300,14 @@ public class SoldierSkill2 : Skill
         soul.Audio.Play();
     }
 
-    public override State handleInput(InputManager input)
+    public override State handleInput(KeyAction input)
     {
         if (time >= 0.8f)
             return State.IDLE;
         return State.NULL;
     }
 
-    public override void update(InputManager input)
+    public override void update(KeyAction input)
     {
         time += Time.deltaTime;
         if (!isAttack && time >= 0.167f)
@@ -317,12 +317,12 @@ public class SoldierSkill2 : Skill
         }
     }
 
-    public override void fixedUpdate(InputManager input)
+    public override void fixedUpdate(KeyAction input)
     {
 
     }
 
-    public override void end(InputManager input)
+    public override void end(KeyAction input)
     {
         time = 0.0f;
     }

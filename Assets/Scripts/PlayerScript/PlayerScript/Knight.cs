@@ -10,21 +10,21 @@ public class Knight : Soul
 
     public Knight(string name) : base(name)
     {
-        skills.Add(KeyCode.X, new KnightSkill1(this));
-        skills.Add(KeyCode.C, new KnightSkill2(this));
+        skills.Add(KeyAction.FIRST_SKILL, new KnightSkill1(this));
+        skills.Add(KeyAction.SECOND_SKILL, new KnightSkill2(this));
         state = new KnightIdleState();
     }
 
-    public override void Start(InputManager input)
+    public override void Start(KeyAction input)
     {
-        if (Mathf.Abs(input.moveDir) > 0)
+        if (input == KeyAction.LEFTMOVE || input == KeyAction.RIGHTMOVE)
             state = new KnightWalkState();
-        else
+        else if (input == KeyAction.NONE)
             state = new KnightIdleState();
         state.start(this, input);
     }
 
-    override public void Update(InputManager input)
+    override public void Update(KeyAction input)
     {
         base.Update(input);
         //dash
@@ -39,13 +39,13 @@ public class Knight : Soul
         }
     }
 
-    override public void FixedUpdate(InputManager input)
+    override public void FixedUpdate(KeyAction input)
     {
         IsGround(this);
         state.fixedUpdate(this, input);
     }
 
-    public override void SwapingSoul(InputManager input)
+    public override void SwapingSoul(KeyAction input)
     {
         state.end(this, input);
         this.state = new KnightIdleState();

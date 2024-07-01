@@ -1,0 +1,186 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="PlayerData" Collapsed="true">
+    <Position X="8.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAIAAAAAAAAAAAAAAAAAAAAAAAAAAABCAAABEAA=</HashCode>
+      <FileName>Assets\Scripts\PlayerScript\PlayerScript\PlayerController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PlayerController" Collapsed="true">
+    <Position X="11" Y="2" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAQRAQAAAiAABAAJBAIQCAABEBBABAAgABEAEAABCEQ=</HashCode>
+      <FileName>Assets\Scripts\PlayerScript\PlayerScript\PlayerController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SoulData" Collapsed="true">
+    <Position X="7" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAQAAIAAAAgAAAAAAAAAAAAAAEAQAAAAAAAAACAgA=</HashCode>
+      <FileName>Assets\Scripts\PlayerScript\PlayerScript\Soul.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MovementData" Collapsed="true">
+    <Position X="6.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAgIAAAAgAACgAAAAIAAAAAAAAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>Assets\Scripts\PlayerScript\PlayerScript\Soul.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CooldownTime" Collapsed="true">
+    <Position X="5.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAIAABAA=</HashCode>
+      <FileName>Assets\Scripts\PlayerScript\PlayerScript\Soul.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Soul" Collapsed="true">
+    <Position X="7.75" Y="6.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>FgwAIDDBAiAAASEAAAMAAFAAABBUGBA0AIAQOAAAACQ=</HashCode>
+      <FileName>Assets\Scripts\PlayerScript\PlayerScript\Soul.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SoulState" Collapsed="true">
+    <Position X="20.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIACAAACAQAAAAAgAAAAAAAAAAAAAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>Assets\Scripts\PlayerScript\PlayerScript\SoulState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="IdleState" Collapsed="true">
+    <Position X="22" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\PlayerScript\PlayerScript\SoulState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WalkState" Collapsed="true">
+    <Position X="28.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIACAAACAAAAAAAgAAAAAAAAAAAAgAAAAAAAAAAEAAA=</HashCode>
+      <FileName>Assets\Scripts\PlayerScript\PlayerScript\SoulState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="JumpState" Collapsed="true">
+    <Position X="14.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIACAAACAgAAAAAgAAAAAAAAAAAAgAAAAAAAAAAEAAA=</HashCode>
+      <FileName>Assets\Scripts\PlayerScript\PlayerScript\SoulState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FallState" Collapsed="true">
+    <Position X="18.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIACAAACAAAAAAAgAAAAAAAAAAAAgAAAAAAAAAAEAAA=</HashCode>
+      <FileName>Assets\Scripts\PlayerScript\PlayerScript\SoulState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DashState" Collapsed="true">
+    <Position X="24.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIACAAACAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAkAAA=</HashCode>
+      <FileName>Assets\Scripts\PlayerScript\PlayerScript\SoulState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GroundBasicAttackState" Collapsed="true">
+    <Position X="32" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIADAAADAAAAAAAgAAAAAAAAAABAgAAAAAAAAAAEAAA=</HashCode>
+      <FileName>Assets\Scripts\PlayerScript\PlayerScript\SoulState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AirBasicAttackState" Collapsed="true">
+    <Position X="16.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIADAAADAAAAAAAgAAAAAAgAAAAAgAAAAAAAAAAEAAA=</HashCode>
+      <FileName>Assets\Scripts\PlayerScript\PlayerScript\SoulState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MeleeGroundBasicAttackState" Collapsed="true">
+    <Position X="31" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACCAAAAAAAAAAAgAIAAAAAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\PlayerScript\PlayerScript\SoulState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MeleeAirBasicAttackState" Collapsed="true">
+    <Position X="17.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACCAAAAAAAAAAAAAIAAAAAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\PlayerScript\PlayerScript\SoulState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RangedGroundBasicAttackState" Collapsed="true">
+    <Position X="33.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAiAAAAAAAAIAAgAAAAAAAAAAAAEAAAAAAAAAAEAAA=</HashCode>
+      <FileName>Assets\Scripts\PlayerScript\PlayerScript\SoulState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RangedAirBasicAttackState" Collapsed="true">
+    <Position X="15.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAiAAAAAAAAIAAgAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\PlayerScript\PlayerScript\SoulState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SkillAdapterState" Collapsed="true">
+    <Position X="20.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIACABACAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>Assets\Scripts\PlayerScript\PlayerScript\SoulState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HitState" Collapsed="true">
+    <Position X="26.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIABAAAAAAAAAAAgAAAAAAAAAAAAgAAAAAAAAAAEAAA=</HashCode>
+      <FileName>Assets\Scripts\PlayerScript\PlayerScript\SoulState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DeadState" Collapsed="true">
+    <Position X="35.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIABAAACAAAAAAAgAAAAAAAAAAAAgAAIAAAAAAAEAAA=</HashCode>
+      <FileName>Assets\Scripts\PlayerScript\PlayerScript\SoulState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Knight" Collapsed="true">
+    <Position X="6" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAiAAAAAAAAEAAAAAAAAAAAAAAEAAAAAAACA=</HashCode>
+      <FileName>Assets\Scripts\PlayerScript\PlayerScript\Knight.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Magician" Collapsed="true">
+    <Position X="8.25" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAiAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAACA=</HashCode>
+      <FileName>Assets\Scripts\PlayerScript\PlayerScript\Magician.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Soldier" Collapsed="true">
+    <Position X="10.5" Y="11" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAiAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAACA=</HashCode>
+      <FileName>Assets\Scripts\PlayerScript\PlayerScript\Soldier.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="DamageType" Collapsed="true">
+    <Position X="8.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAQAAgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\PlayerScript\PlayerScript\PlayerController.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="State" Collapsed="true">
+    <Position X="22.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgEAAAAAgAAgAAAAAAAAAAACAAAAIAACAAAEAAAACA=</HashCode>
+      <FileName>Assets\Scripts\PlayerScript\PlayerScript\SoulState.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="맑은 고딕" Size="9" />
+</ClassDiagram>

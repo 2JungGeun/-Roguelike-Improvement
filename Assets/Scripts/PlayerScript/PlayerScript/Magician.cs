@@ -6,26 +6,26 @@ public class Magician : Soul
 {
     public Magician(string name) : base(name)
     {
-        skills.Add(KeyCode.X, new MagicianSkill1(this));
-        skills.Add(KeyCode.C, new MagicianSkill2(this));
+        skills.Add(KeyAction.FIRST_SKILL, new MagicianSkill1(this));
+        skills.Add(KeyAction.SECOND_SKILL, new MagicianSkill2(this));
         state = new MagicianIdleState();
     }
 
-    public override void Start(InputManager input)
+    public override void Start(KeyAction input)
     {
-        if (Mathf.Abs(input.moveDir) > 0)
+        if (input == KeyAction.LEFTMOVE || input == KeyAction.RIGHTMOVE)
             state = new MagicianWalkState();
-        else
+        else if (input == KeyAction.NONE)
             state = new MagicianIdleState();
         state.start(this, input);
     }
 
-    public override void Update(InputManager input)
+    public override void Update(KeyAction input)
     {
         base.Update(input);
     }
 
-    public override void FixedUpdate(InputManager input)
+    public override void FixedUpdate(KeyAction input)
     {
         IsGround(this);
         state.fixedUpdate(this, input);
@@ -56,7 +56,7 @@ public class Magician : Soul
         }
     }
 
-    public override void SwapingSoul(InputManager input)
+    public override void SwapingSoul(KeyAction input)
     {
         state.end(this, input);
         state = new MagicianIdleState();

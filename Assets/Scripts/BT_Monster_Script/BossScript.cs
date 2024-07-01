@@ -25,7 +25,13 @@ public class EnemyData
 
 }
 
-public class BossScript : MonoBehaviour
+
+public interface IMonster
+{
+    abstract public void Hit(int damage);
+}
+
+public class BossScript : MonoBehaviour, IMonster
 {
     [SerializeField]
     private GameObject UIPrefab;
@@ -43,7 +49,7 @@ public class BossScript : MonoBehaviour
     {
         data = new EnemyData();
         data.hp = 1000;
-        data.moveSpeed = 4.0f;
+        data.moveSpeed = 6.0f;
         data.lookAt = GetComponent<SpriteRenderer>().flipX ? 1.0f : -1.0f;
         data.target = null;
         data.Collider = GetComponent<Collider2D>();
@@ -141,7 +147,6 @@ public class BossScript : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
-
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireCube(this.transform.position + new Vector3(0, 2.5f, 0), new Vector2(3.0f, 5.0f));

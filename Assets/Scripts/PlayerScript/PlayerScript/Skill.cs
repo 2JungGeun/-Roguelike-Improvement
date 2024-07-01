@@ -22,15 +22,15 @@ abstract public class Skill
         this.time = 0.0f;
     }
 
-    virtual public void start(InputManager input)
+    virtual public void start(KeyAction input)
     {
         soul.UseCost(this.cost);
     }
 
-    abstract public State handleInput(InputManager input);
-    abstract public void update(InputManager input);
-    abstract public void fixedUpdate(InputManager input);
-    abstract public void end(InputManager input);
+    abstract public State handleInput(KeyAction input);
+    abstract public void update(KeyAction input);
+    abstract public void fixedUpdate(KeyAction input);
+    abstract public void end(KeyAction input);
 
     public void ColldownUpdate()
     {
@@ -43,9 +43,9 @@ abstract public class Skill
         }
     }
 
-    public bool CanUseSkill(int intellectuality)
+    public bool CanUseSkill()
     {
-        if (this.isSkillAvailable && intellectuality > cost)
+        if (this.isSkillAvailable && soul.GetIntellectuality() > cost)
             return true;
         else
             return false;

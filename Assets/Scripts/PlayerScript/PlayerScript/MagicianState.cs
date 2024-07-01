@@ -14,7 +14,7 @@ public class MagicianDashState : DashState { }
 
 public class MagicianGroundBasicAttackState : RangedGroundBasicAttackState
 {
-    public override void start(Soul soul, InputManager input)
+    public override void start(Soul soul, KeyAction input)
     {
         audioClip = Resources.Load<AudioClip>("Sound/Magician/Attack/Attack0");
         base.start(soul, input);
@@ -37,7 +37,7 @@ public class MagicianGroundBasicAttackState : RangedGroundBasicAttackState
 public class MagicianAirBasicAttackState : RangedAirBasicAttackState
 {
 
-    public override void start(Soul soul, InputManager input)
+    public override void start(Soul soul, KeyAction input)
     {
         delay = 0.25f;
         audioClip = Resources.Load<AudioClip>("Sound/Magician/Attack/Attack1");
@@ -59,7 +59,7 @@ public class MagicianSkill1 : Skill
         audioClip = Resources.Load<AudioClip>("Sound/Magician/Skill1/Attack");
     }
 
-    public override void start(InputManager input)
+    public override void start(KeyAction input)
     {
         base.start(input);
         isSkillAvailable = false;
@@ -76,20 +76,20 @@ public class MagicianSkill1 : Skill
         soul.Audio.Play();
     }
 
-    public override State handleInput(InputManager input)
+    public override State handleInput(KeyAction input)
     {
         if (time >= 0.5f)
             return State.IDLE;
         return State.NULL;
     }
 
-    public override void update(InputManager input)
+    public override void update(KeyAction input)
     {
         time += Time.deltaTime;
     }
 
-    public override void fixedUpdate(InputManager input) { }
-    public override void end(InputManager input) { }
+    public override void fixedUpdate(KeyAction input) { }
+    public override void end(KeyAction input) { }
 }
 
 public class MagicianSkill2 : Skill
@@ -97,14 +97,14 @@ public class MagicianSkill2 : Skill
     private MagicianSkill2State state;
     public MagicianSkill2(Soul soul) : base(soul, 10.0f, 30) { }
 
-    public override void start(InputManager input)
+    public override void start(KeyAction input)
     {
         base.start(input);
         isSkillAvailable = false;
         state = new MagicianSkill2ChargeState();
         state.start(soul, 0.0f);
     }
-    public override State handleInput(InputManager input)
+    public override State handleInput(KeyAction input)
     {
         float i = 0.0f;
         if (state.handleInput(soul) != null)
@@ -117,12 +117,12 @@ public class MagicianSkill2 : Skill
             return State.IDLE;
         return State.NULL;
     }
-    public override void update(InputManager input)
+    public override void update(KeyAction input)
     {
         state.update(soul);
     }
-    public override void fixedUpdate(InputManager input) { }
-    public override void end(InputManager input)
+    public override void fixedUpdate(KeyAction input) { }
+    public override void end(KeyAction input)
     {
         state = null;
     }

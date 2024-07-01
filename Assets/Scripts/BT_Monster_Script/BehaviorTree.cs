@@ -107,7 +107,7 @@ namespace BT
             {
                 isAbort = true;
                 abortNodePrioriy = conditionNodes[index].Priority;
-                Debug.Log("---------------------------------------Assert------------------------------------------" + conditionNodes[index].Priority);
+                //Debug.Log("---------------------------------------Assert------------------------------------------" + conditionNodes[index].Priority);
                 return true;
             }
             return false;

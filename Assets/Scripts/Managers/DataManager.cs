@@ -4,23 +4,8 @@ using UnityEngine;
 using System.Text.RegularExpressions;
 using System.IO;
 using System;
-public class DataManager : MonoBehaviour
+public class DataManager : Singleton<DataManager>
 {
-
-    public static DataManager Instance()
-    {
-        if (_instance == null)
-        {
-            _instance = GameObject.FindObjectOfType<DataManager>();
-            if (_instance == null)
-            {
-                GameObject container = new GameObject("DataManager");
-                _instance = container.AddComponent<DataManager>();
-            }
-        }
-        return _instance;
-    }
-    private static DataManager _instance;
     private string soulDataPath = "Database/SoulData";
     private string soulPricePath = "Database/SoulPrice";
     private Dictionary<string, SoulData> soulDataDic = new Dictionary<string, SoulData>();
@@ -30,9 +15,9 @@ public class DataManager : MonoBehaviour
     private List<string> soulList = new List<string>();
     public List<string> SoulList { get { return soulList; } }
 
-    private void Awake()
+    private new void Awake()
     {
-        _instance = this;
+        base.Awake();
         LoadBaseData();
     }
 

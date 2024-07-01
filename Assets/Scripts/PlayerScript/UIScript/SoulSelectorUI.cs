@@ -46,7 +46,7 @@ public class SoulSelectorUI : MonoBehaviour
         {
             this.name.text = statue.SoulList[index].Item1;
             icon.GetComponent<Image>().sprite = Resources.Load<Sprite>(iconPath + statue.SoulList[index].Item1 + "Icon");
-            price = DataManager.Instance().SoulPriceDic[name.text];
+            price = DataManager.Instance.SoulPriceDic[name.text];
             priceText.text = price.ToString();
         }
         else
@@ -65,10 +65,10 @@ public class SoulSelectorUI : MonoBehaviour
                 currStatue.Audio.clip = audioClips[0];
                 currStatue.Audio.Play();
                 controller.UseMoney(price);
-                controller.ModifySoul(name.text, 1);
+                controller.ModifySoul(name.text);
                 currStatue.SetSoulDisabled(index);
                 currStatue.IsActivatedUI = false;
-                UIManager.GetUIManager().HideStatueUi();
+                UIManager.Instance.HideStatueUi();
                 currStatue = null;
             }
             else

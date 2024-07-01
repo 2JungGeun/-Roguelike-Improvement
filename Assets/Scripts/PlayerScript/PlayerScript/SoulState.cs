@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-//handelInput���� ������ ������ ���ϰ��� �޶� �߻��ϴ� �ߺ��ڵ带 ���̱� ���ؼ� ������ ��� ���¿� ���� enum�� ����
 public enum State
 {
     IDLE,
@@ -20,44 +19,45 @@ public enum State
 abstract public class SoulState
 {
     protected State innerState = State.NULL;
-    virtual public void start(Soul soul, InputManager input) { }
-    abstract public SoulState handleInput(Soul soul, InputManager input);
-    virtual public void update(Soul soul, InputManager input) { }
-    virtual public void fixedUpdate(Soul soul, InputManager input) { }
-    virtual public void end(Soul soul, InputManager input) { }
+    virtual public void start(Soul soul, KeyAction input) { }
+    abstract public SoulState handleInput(Soul soul, KeyAction input);
+    virtual public void update(Soul soul, KeyAction input) { }
+    virtual public void fixedUpdate(Soul soul, KeyAction input) { }
+    virtual public void end(Soul soul, KeyAction input) { }
 }
 
 abstract public class IdleState : SoulState
 {
-    override public void start(Soul soul, InputManager input)
+    override public void start(Soul soul, KeyAction input)
     {
         soul.Anime.Play("IDLE");
     }
-    override public SoulState handleInput(Soul soul, InputManager input)
+    override public SoulState handleInput(Soul soul, KeyAction input)
     {
-        if (input.isJumpKeyDown)
+        if (input == KeyAction.JUMP)
         {
             innerState = State.JUMP;
         }
-        else if (input.isDownJumpKeyDown || !soul.IsOnGround)
+        else if (input == KeyAction.DONWJUMP || !soul.IsOnGround)
         {
             innerState = State.FALL;
         }
-        else if (Mathf.Abs(input.moveDir) > 0)
+        else if (input == KeyAction.LEFTMOVE || input == KeyAction.RIGHTMOVE)
         {
             innerState = State.WALK;
         }
-        else if (soul.Data.isUseDash && soul.mCooldownTime.dashCoolingdown && input.isDashKeyDown)
+        else if (soul.Data.isUseDash && soul.mCooldownTime.dashCoolingdown && input == KeyAction.DASH)
         {
             innerState = State.DASH;
         }
-        else if (input.isAttackKeyDown)
+        else if (input == KeyAction.BASIC_ATTACK)
         {
             innerState = State.BASEATTACK;
         }
-        else if (input.isSkillKeyDown.Item1)
+        else if (input == KeyAction.FIRST_SKILL || input == KeyAction.SECOND_SKILL)
         {
-            innerState = State.SKILL;
+            if (soul.Skills[input].CanUseSkill())
+                innerState = State.SKILL;
         }
         return soul.StateChanger(innerState);
     }
@@ -66,7 +66,7 @@ abstract public class IdleState : SoulState
 abstract public class WalkState : SoulState
 {
     AudioClip audioClip;
-    override public void start(Soul soul, InputManager input)
+    override public void start(Soul soul, KeyAction input)
     {
         audioClip = Resources.Load<AudioClip>("Sound/Public/Walk/Walk");
         soul.Audio.clip = audioClip;
@@ -74,55 +74,51 @@ abstract public class WalkState : SoulState
         soul.Audio.Play();
     }
 
-    override public SoulState handleInput(Soul soul, InputManager input)
+    override public SoulState handleInput(Soul soul, KeyAction input)
     {
-        if (input.isJumpKeyDown)
+        if (input == KeyAction.JUMP)
         {
             innerState = State.JUMP;
         }
-        else if (input.isDownJumpKeyDown || !soul.IsOnGround)
+        else if (input == KeyAction.DONWJUMP || !soul.IsOnGround)
         {
             innerState = State.FALL;
         }
-        else if (Mathf.Abs(input.moveDir) == 0)
+        else if (input == KeyAction.NONE)
         {
             innerState = State.IDLE;
         }
-        else if (soul.Data.isUseDash && soul.mCooldownTime.dashCoolingdown && input.isDashKeyDown)
+        else if (soul.Data.isUseDash && soul.mCooldownTime.dashCoolingdown && input == KeyAction.DASH)
         {
             innerState = State.DASH;
         }
-        else if (input.isAttackKeyDown)
+        else if (input == KeyAction.BASIC_ATTACK)
         {
             innerState = State.BASEATTACK;
         }
-        else if (input.isSkillKeyDown.Item1)
+        else if (input == KeyAction.FIRST_SKILL || input == KeyAction.SECOND_SKILL)
         {
-            innerState = State.SKILL;
+            if (soul.Skills[input].CanUseSkill())
+                innerState = State.SKILL;
         }
         return soul.StateChanger(innerState);
     }
 
-    override public void update(Soul soul, InputManager input)
+    override public void update(Soul soul, KeyAction input)
     {
-        switch (input.moveDir)
-        {
-            case -1:
+        if(input == KeyAction.LEFTMOVE)
                 soul.Sprite.flipX = true;
-                break;
-            case 1:
-                soul.Sprite.flipX = false;
-                break;
-        }
+        else if(input == KeyAction.RIGHTMOVE)
+            soul.Sprite.flipX = false;
         soul.MoveData.lookAt = (soul.Sprite.flipX) ? -1 : 1;
-        soul.mTransform.position = Vector2.MoveTowards(soul.mTransform.position, soul.mTransform.position + new Vector3(input.moveDir * soul.Data.speed * Time.deltaTime, 0, 0), 0.8f);
+        soul.mTransform.position = Vector2.MoveTowards(soul.mTransform.position, soul.mTransform.position + new Vector3(soul.MoveData.lookAt * soul.Data.speed * Time.deltaTime, 0, 0), 0.8f);
     }
-    public override void fixedUpdate(Soul soul, InputManager input)
+    public override void fixedUpdate(Soul soul, KeyAction input)
     {
         
     }
 
-    public override void end(Soul soul, InputManager input)
+    public override void end(Soul soul, KeyAction input)
     {
         soul.Audio.Stop();
     }
@@ -131,63 +127,60 @@ abstract public class WalkState : SoulState
 abstract public class JumpState : SoulState
 {
     AudioClip audioClip;
-    override public void start(Soul soul, InputManager input)
+    override public void start(Soul soul, KeyAction input)
     {
         audioClip = Resources.Load<AudioClip>("Sound/Public/Jump/Jump");
         soul.Audio.clip = audioClip;
         soul.Anime.Play("JUMP");
         soul.IsOnGround = false;
         Jump(soul);
-        input.isJumpKeyDown = false;
         soul.Rigid.gravityScale = soul.MoveData.generalGravityScale;
         soul.Audio.Play();
     }
 
-    override public SoulState handleInput(Soul soul, InputManager input)
+    override public SoulState handleInput(Soul soul, KeyAction input)
     {
         if (soul.Rigid.velocity.y < 0)
         {
             innerState = State.FALL;
         }
-        else if (input.isJumpKeyDown && soul.MoveData.jumpCount < soul.Data.availableJumpCount)
+        else if (input == KeyAction.JUMP && soul.MoveData.jumpCount < soul.Data.availableJumpCount)
         {
             innerState = State.JUMP;
         }
-        else if (soul.Data.isUseDash && soul.mCooldownTime.dashCoolingdown && input.isDashKeyDown)
+        else if (soul.Data.isUseDash && soul.mCooldownTime.dashCoolingdown && input == KeyAction.DASH)
         {
             innerState = State.DASH;
         }
-        else if (input.isAttackKeyDown)
+        else if (input == KeyAction.BASIC_ATTACK)
         {
             innerState = State.AIRATTACK;
         }
-        else if (input.isSkillKeyDown.Item1)
+        else if (input == KeyAction.FIRST_SKILL || input == KeyAction.SECOND_SKILL)
         {
-            innerState = State.SKILL;
+            if (soul.Skills[input].CanUseSkill())
+                innerState = State.SKILL;
         }
         return soul.StateChanger(innerState);
     }
 
-    public override void update(Soul soul, InputManager input)
+    public override void update(Soul soul, KeyAction input)
     {
-        switch (input.moveDir)
-        {
-            case -1:
-                soul.Sprite.flipX = true;
-                break;
-            case 1:
-                soul.Sprite.flipX = false;
-                break;
-        }
+        if (input == KeyAction.NONE)
+            return;
+        if (input == KeyAction.LEFTMOVE)
+            soul.Sprite.flipX = true;
+        else if (input == KeyAction.RIGHTMOVE)
+            soul.Sprite.flipX = false;
         soul.MoveData.lookAt = (soul.Sprite.flipX) ? -1 : 1;
-        soul.mTransform.position = Vector2.MoveTowards(soul.mTransform.position, soul.mTransform.position + new Vector3(input.moveDir * soul.Data.speed * Time.deltaTime, 0, 0), 0.8f);
+        soul.mTransform.position = Vector2.MoveTowards(soul.mTransform.position, soul.mTransform.position + new Vector3(soul.MoveData.lookAt * soul.Data.speed * Time.deltaTime, 0, 0), 0.8f);
     }
-    override public void fixedUpdate(Soul soul, InputManager input)
+    override public void fixedUpdate(Soul soul, KeyAction input)
     {
         
     }
 
-    override public void end(Soul soul, InputManager input) { }
+    override public void end(Soul soul, KeyAction input) { }
 
     private void Jump(Soul soul)
     {
@@ -200,66 +193,61 @@ abstract public class JumpState : SoulState
 abstract public class FallState : SoulState
 {
     AudioClip audioClip;
-    public override void start(Soul soul, InputManager input)
+    public override void start(Soul soul, KeyAction input)
     {
         soul.Anime.Play("FALL");
         soul.IsOnGround = false;
         soul.Rigid.gravityScale = soul.MoveData.fallGravityScale;
-        if (input.isDownJumpKeyDown)
-        {
+        if (input == KeyAction.DONWJUMP)
             soul.MoveData.jumpCount++;
-            input.isDownJumpKeyDown = false;
-        }
     }
-    override public SoulState handleInput(Soul soul, InputManager input)
+    override public SoulState handleInput(Soul soul, KeyAction input)
     {
         if (soul.Rigid.velocity.y == 0 && soul.IsOnGround)
         {
-            if (Mathf.Abs(input.moveDir) > 0)
+            if (input == KeyAction.LEFTMOVE || input == KeyAction.RIGHTMOVE)
                 innerState = State.WALK;
-            else
+            else if (input == KeyAction.NONE)
                 innerState = State.IDLE;
         }
-        else if (input.isJumpKeyDown && soul.MoveData.jumpCount < soul.Data.availableJumpCount)
+        else if (input == KeyAction.JUMP && soul.MoveData.jumpCount < soul.Data.availableJumpCount)
         {
             innerState = State.JUMP;
         }
-        else if (soul.Data.isUseDash && soul.mCooldownTime.dashCoolingdown && input.isDashKeyDown)
+        else if (soul.Data.isUseDash && soul.mCooldownTime.dashCoolingdown && input == KeyAction.DASH)
         {
             innerState = State.DASH;
         }
-        else if (input.isAttackKeyDown)
+        else if (input == KeyAction.BASIC_ATTACK)
         {
             innerState = State.AIRATTACK;
         }
-        else if (input.isSkillKeyDown.Item1)
+        else if (input == KeyAction.FIRST_SKILL || input == KeyAction.SECOND_SKILL)
         {
-            innerState = State.SKILL;
+            if(soul.Skills[input].CanUseSkill())
+                innerState = State.SKILL;
         }
         return soul.StateChanger(innerState);
     }
 
-    public override void update(Soul soul, InputManager input)
+    public override void update(Soul soul, KeyAction input)
     {
-        switch (input.moveDir)
-        {
-            case -1:
-                soul.Sprite.flipX = true;
-                break;
-            case 1:
-                soul.Sprite.flipX = false;
-                break;
-        }
+        if (input == KeyAction.NONE)
+            return;
+        if (input == KeyAction.LEFTMOVE)
+            soul.Sprite.flipX = true;
+        else if (input == KeyAction.RIGHTMOVE)
+            soul.Sprite.flipX = false;
         soul.MoveData.lookAt = (soul.Sprite.flipX) ? -1 : 1;
-        soul.mTransform.position = Vector2.MoveTowards(soul.mTransform.position, soul.mTransform.position + new Vector3(input.moveDir * soul.Data.speed * Time.deltaTime, 0, 0), 0.8f);
+        soul.mTransform.position = Vector2.MoveTowards(soul.mTransform.position, soul.mTransform.position + new Vector3(soul.MoveData.lookAt * soul.Data.speed * Time.deltaTime, 0, 0), 0.8f);
     }
 
-    public override void fixedUpdate(Soul soul, InputManager input)
+    public override void fixedUpdate(Soul soul, KeyAction input)
     {
         
     }
 
-    public override void end(Soul soul, InputManager input)
+    public override void end(Soul soul, KeyAction input)
     {
         if (soul.IsOnGround)
         {
@@ -273,7 +261,7 @@ abstract public class FallState : SoulState
 abstract public class DashState : SoulState
 {
     protected float dashTime;
-    override public void start(Soul soul, InputManager input)
+    override public void start(Soul soul, KeyAction input)
     {
         dashTime = 0;
         soul.Anime.Play("DASH");
@@ -281,7 +269,7 @@ abstract public class DashState : SoulState
         soul.Rigid.velocity = new Vector2(soul.Rigid.velocity.x, 0.0f);
         soul.Rigid.gravityScale = 0.0f;
     }
-    override public SoulState handleInput(Soul soul, InputManager input)
+    override public SoulState handleInput(Soul soul, KeyAction input)
     {
         if (soul.MoveData.dashTime < dashTime)
         {
@@ -292,21 +280,18 @@ abstract public class DashState : SoulState
         }
         return soul.StateChanger(innerState);
     }
-    override public void update(Soul soul, InputManager input)
+    override public void update(Soul soul, KeyAction input)
     {
         dashTime += Time.deltaTime;
         soul.mTransform.position = Vector2.MoveTowards(soul.mTransform.position, soul.mTransform.position + new Vector3(soul.MoveData.lookAt * soul.MoveData.dashDistance * Time.deltaTime, 0, 0), 0.8f);
     }
 
-    public override void fixedUpdate(Soul soul, InputManager input)
+    public override void fixedUpdate(Soul soul, KeyAction input)
     {
-        //soul.Rigid.velocity = new Vector2(soul.Rigid.velocity.x, 0.0f);
-        
     }
 
-    override public void end(Soul soul, InputManager input)
+    override public void end(Soul soul, KeyAction input)
     {
-        input.isDashKeyDown = false;
         soul.Rigid.gravityScale = soul.MoveData.fallGravityScale;
     }
 }
@@ -318,7 +303,7 @@ abstract public class GroundBasicAttackState : SoulState
     protected float time;
     protected bool isAttack = false;
 
-    override public void start(Soul soul, InputManager input)
+    override public void start(Soul soul, KeyAction input)
     {
         soul.attacking = true;
         soul.Anime.Play("ATTACK" + soul.AttackCount.ToString());
@@ -327,7 +312,7 @@ abstract public class GroundBasicAttackState : SoulState
         time = 0.0f;
     }
 
-    override public SoulState handleInput(Soul soul, InputManager input)
+    override public SoulState handleInput(Soul soul, KeyAction input)
     {
         if (time >= attackDelay[soul.AttackCount])
         {
@@ -339,18 +324,17 @@ abstract public class GroundBasicAttackState : SoulState
         return soul.StateChanger(innerState);
     }
 
-    override public void update(Soul soul, InputManager input)
+    override public void update(Soul soul, KeyAction input)
     {
         time += Time.deltaTime;
     }
 
-    abstract override public void fixedUpdate(Soul soul, InputManager input);
-    override public void end(Soul soul, InputManager input)
+    abstract override public void fixedUpdate(Soul soul, KeyAction input);
+    override public void end(Soul soul, KeyAction input)
     {
         soul.attacking = false;
         soul.combatAttackTerm = 1.5f;
         soul.AttackCount++;
-        input.isAttackKeyDown = false;
     }
 }
 
@@ -360,14 +344,14 @@ abstract public class AirBasicAttackState : SoulState
     protected float delay = 0.42f;
     protected float time = 0.0f;
     protected bool isAttack = false;
-    public override void start(Soul soul, InputManager input)
+    public override void start(Soul soul, KeyAction input)
     {
         soul.Anime.Play("AIRATTACK");
         soul.Audio.clip = audioClip;
         soul.Audio.Play();
     }
 
-    public override SoulState handleInput(Soul soul, InputManager input)
+    public override SoulState handleInput(Soul soul, KeyAction input)
     {
         if (time >= delay)
         {
@@ -381,18 +365,17 @@ abstract public class AirBasicAttackState : SoulState
         return soul.StateChanger(innerState);
     }
 
-    public override void update(Soul soul, InputManager input)
+    public override void update(Soul soul, KeyAction input)
     {
         time += Time.deltaTime;
     }
 
-    public override void fixedUpdate(Soul soul, InputManager input)
+    public override void fixedUpdate(Soul soul, KeyAction input)
     {
     }
 
-    public override void end(Soul soul, InputManager input)
+    public override void end(Soul soul, KeyAction input)
     {
-        input.isAttackKeyDown = false;
         isAttack = false;
     }
 }
@@ -401,12 +384,12 @@ abstract public class MeleeGroundBasicAttackState : GroundBasicAttackState
 {
     protected Vector2 offset;
     protected Vector2 size;
-    public override void start(Soul soul, InputManager input)
+    public override void start(Soul soul, KeyAction input)
     {
         base.start(soul, input);
     }
 
-    public override void fixedUpdate(Soul soul, InputManager input)
+    public override void fixedUpdate(Soul soul, KeyAction input)
     {
         if (time >= (attackDelay[soul.AttackCount] * 0.5f) && !isAttack)
         {
@@ -421,7 +404,7 @@ abstract public class MeleeGroundBasicAttackState : GroundBasicAttackState
         {
             foreach (RaycastHit2D hit in hits)
             {
-                hit.collider.GetComponent<BossScript>().Hit(soul.Data.damage);
+                hit.collider.GetComponent<IMonster>().Hit(soul.Data.damage);
             }
         }
         return true;
@@ -432,7 +415,7 @@ abstract public class MeleeAirBasicAttackState : AirBasicAttackState
 {
     protected Vector2 offset;
     protected Vector2 size;
-    public override void fixedUpdate(Soul soul, InputManager input)
+    public override void fixedUpdate(Soul soul, KeyAction input)
     {
         if (time >= (delay * 0.5f) && !isAttack)
         {
@@ -447,7 +430,7 @@ abstract public class MeleeAirBasicAttackState : AirBasicAttackState
         {
             foreach (RaycastHit2D hit in hits)
             {
-                hit.collider.gameObject.GetComponent<BossScript>().Hit(soul.Data.damage);
+                hit.collider.gameObject.GetComponent<IMonster>().Hit(soul.Data.damage);
             }
         }
         return true;
@@ -460,13 +443,13 @@ abstract public class RangedGroundBasicAttackState : GroundBasicAttackState
     protected int projectileIndex = 0;
     protected Vector2 direction;
     protected float degree = 0.0f;
-    public override void start(Soul soul, InputManager input)
+    public override void start(Soul soul, KeyAction input)
     {
         base.start(soul, input);
         direction = new Vector2(soul.MoveData.lookAt, 0.0f);
     }
 
-    public override void update(Soul soul, InputManager input)
+    public override void update(Soul soul, KeyAction input)
     {
         time += Time.deltaTime;
         if (time >= (attackDelay[soul.AttackCount] * 0.5f) && !isAttack)
@@ -475,7 +458,7 @@ abstract public class RangedGroundBasicAttackState : GroundBasicAttackState
         }
     }
 
-    public override void fixedUpdate(Soul soul, InputManager input) { }
+    public override void fixedUpdate(Soul soul, KeyAction input) { }
 
     protected bool createProjectile(Soul soul, int index)
     {
@@ -489,13 +472,13 @@ abstract public class RangedAirBasicAttackState : AirBasicAttackState
 {
     protected GameObject projectile;
     protected Vector2 direction;
-    public override void start(Soul soul, InputManager input)
+    public override void start(Soul soul, KeyAction input)
     {
         base.start(soul, input);
         direction = new Vector2(soul.MoveData.lookAt, 0.0f);
     }
 
-    public override void fixedUpdate(Soul soul, InputManager input)
+    public override void fixedUpdate(Soul soul, KeyAction input)
     {
         if (time >= (delay * 0.5f) && !isAttack)
         {
@@ -514,27 +497,26 @@ abstract public class RangedAirBasicAttackState : AirBasicAttackState
 public class SkillAdapterState : SoulState
 {
     Skill skill;
-    public override void start(Soul soul, InputManager input)
+    public override void start(Soul soul, KeyAction input)
     {
-        skill = soul.Skills[input.isSkillKeyDown.Item2];
+        skill = soul.Skills[input];
         skill.start(input);
     }
-    public override SoulState handleInput(Soul soul, InputManager input)
+    public override SoulState handleInput(Soul soul, KeyAction input)
     {
         return soul.StateChanger(skill.handleInput(input));
     }
-    public override void update(Soul soul, InputManager input)
+    public override void update(Soul soul, KeyAction input)
     {
         skill.update(input);
     }
-    public override void fixedUpdate(Soul soul, InputManager input)
+    public override void fixedUpdate(Soul soul, KeyAction input)
     {
         skill.fixedUpdate(input);
     }
-    public override void end(Soul soul, InputManager input)
+    public override void end(Soul soul, KeyAction input)
     {
         skill.end(input);
-        input.isSkillKeyDown = (false, KeyCode.None);
     }
 }
 
@@ -542,7 +524,7 @@ public class HitState : SoulState
 {
     float time;
     AudioClip audioClip;
-    public override void start(Soul soul, InputManager input)
+    public override void start(Soul soul, KeyAction input)
     {
         soul.Anime.Play("HIT");
         audioClip = Resources.Load<AudioClip>("Sound/Public/Hit/HPHit");
@@ -550,7 +532,7 @@ public class HitState : SoulState
         soul.Audio.Play();
         time = 0.0f;
     }
-    public override SoulState handleInput(Soul soul, InputManager input)
+    public override SoulState handleInput(Soul soul, KeyAction input)
     {
         if (time >= 0.2f)
         {
@@ -562,7 +544,7 @@ public class HitState : SoulState
         return soul.StateChanger(innerState);
     }
 
-    public override void update(Soul soul, InputManager input)
+    public override void update(Soul soul, KeyAction input)
     {
         time += Time.deltaTime;
     }
@@ -574,7 +556,7 @@ public class DeadState : SoulState
     AudioClip audioClip;
 
     GameObject dead;
-    public override void start(Soul soul, InputManager input)
+    public override void start(Soul soul, KeyAction input)
     {
         time = 0.0f;
         dead = Object.Instantiate(Resources.Load<GameObject>("Prefab/DeadMain"), soul.mTransform.position, soul.mTransform.rotation);
@@ -595,17 +577,17 @@ public class DeadState : SoulState
         soul.Audio.Play();
     }
 
-    public override SoulState handleInput(Soul soul, InputManager input)
+    public override SoulState handleInput(Soul soul, KeyAction input)
     {
         if (4.0f <= time)
             innerState = State.IDLE;
         return soul.StateChanger(innerState);
     }
-    public override void update(Soul soul, InputManager input)
+    public override void update(Soul soul, KeyAction input)
     {
         time += Time.deltaTime;
     }
-    public override void end(Soul soul, InputManager input)
+    public override void end(Soul soul, KeyAction input)
     {
         Object.Destroy(dead);
         SceneManager.LoadScene("SampleScene");

@@ -20,7 +20,6 @@ public class ShockWave : MonoBehaviour
     {
         if(collision.CompareTag("Player"))
         {
-            Debug.Log("½ÇÇàµÊ");
             collision.GetComponent<PlayerController>().Hit(DamageType.HP, 1);
         }
     }

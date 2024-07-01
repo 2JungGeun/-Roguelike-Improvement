@@ -14,7 +14,7 @@ public class KnightDashState : DashState { }
 
 public class KnightGroundBasicAttackState : MeleeGroundBasicAttackState 
 {
-    public override void start(Soul soul, InputManager input)
+    public override void start(Soul soul, KeyAction input)
     {
         audioClip = Resources.Load<AudioClip>("Sound/Knight/Attack/Hit/Attack");
         base.start(soul, input);
@@ -28,7 +28,7 @@ public class KnightGroundBasicAttackState : MeleeGroundBasicAttackState
 
 public class KnightAirBasicAttackState : MeleeAirBasicAttackState
 {
-    public override void start(Soul soul, InputManager input)
+    public override void start(Soul soul, KeyAction input)
     {
         audioClip = Resources.Load<AudioClip>("Sound/Knight/Attack/NonHit/Attack");
         base.start(soul, input);
@@ -52,7 +52,7 @@ public class KnightSkill1 : Skill
         audioClip = Resources.Load<AudioClip>("Sound/Knight/Skill/DashSkill");
     }
 
-    public override void start(InputManager input)
+    public override void start(KeyAction input)
     {
         base.start(input);
         isSkillAvailable = false;
@@ -64,7 +64,7 @@ public class KnightSkill1 : Skill
         soul.Audio.Play();
     }
 
-    public override State handleInput(InputManager input)
+    public override State handleInput(KeyAction input)
     {
         if (time >= 0.4f)
             if (soul.IsOnGround)
@@ -74,12 +74,12 @@ public class KnightSkill1 : Skill
         return State.NULL;
     }
 
-    public override void update(InputManager input)
+    public override void update(KeyAction input)
     {
         time += Time.deltaTime;
     }
 
-    public override void fixedUpdate(InputManager input)
+    public override void fixedUpdate(KeyAction input)
     {
 
         soul.Rigid.velocity = new Vector2(soul.Rigid.velocity.x, 0.0f);
@@ -98,7 +98,7 @@ public class KnightSkill1 : Skill
 
     }
 
-    public override void end(InputManager input)
+    public override void end(KeyAction input)
     {
         if (!isAttacked)
             CreateHitbox();
@@ -114,7 +114,7 @@ public class KnightSkill1 : Skill
         {
             foreach (RaycastHit2D hit in hits)
             {
-                hit.collider.GetComponent<BossScript>().Hit(soul.Data.damage * 2);
+                hit.collider.GetComponent<IMonster>().Hit(soul.Data.damage * 2);
             }
         }
     }
@@ -139,7 +139,7 @@ public class KnightSkill2 : Skill
         audioClips[2] = Resources.Load<AudioClip>("Sound/Knight/Skill/Slash1");
     }
 
-    public override void start(InputManager input)
+    public override void start(KeyAction input)
     {
         base.start(input);
         isSkillAvailable = false;
@@ -151,7 +151,7 @@ public class KnightSkill2 : Skill
         CreateHitbox();
     }
 
-    public override State handleInput(InputManager input)
+    public override State handleInput(KeyAction input)
     {
         if (time >= 0.542f)
             if (soul.IsOnGround)
@@ -161,12 +161,12 @@ public class KnightSkill2 : Skill
         return State.NULL;
     }
 
-    public override void update(InputManager input)
+    public override void update(KeyAction input)
     {
         time += Time.deltaTime;
     }
 
-    public override void fixedUpdate(InputManager input)
+    public override void fixedUpdate(KeyAction input)
     {
         if (time >= delay && attackCount < 2)
         {
@@ -178,7 +178,7 @@ public class KnightSkill2 : Skill
         }
     }
 
-    public override void end(InputManager input) { }
+    public override void end(KeyAction input) { }
 
     private void CreateHitbox()
     {
@@ -186,7 +186,7 @@ public class KnightSkill2 : Skill
         if (hits != null)
         { foreach (RaycastHit2D hit in hits)
             {
-                hit.collider.GetComponent<BossScript>().Hit(soul.Data.damage);
+                hit.collider.GetComponent<IMonster>().Hit(soul.Data.damage);
             }
         }
     }

@@ -41,14 +41,14 @@ public class Statue : MonoBehaviour
             }
             if (!isActivatedUI)
             {
-                UIManager.GetUIManager().ShowStatueUI(this);
+                UIManager.Instance.ShowStatueUI(this);
                 audio.clip = audioClip;
                 audio.Play();
                 isActivatedUI = true;
             }
             else
             {
-                UIManager.GetUIManager().HideStatueUi();
+                UIManager.Instance.HideStatueUi();
                 isActivatedUI = false;
             }
         }
@@ -58,20 +58,20 @@ public class Statue : MonoBehaviour
     {
         int i = 0;
         bool result = false;
-        while (i < UIManager.GetUIManager().SoulSeclectorUINum)
+        while (i < UIManager.Instance.SoulSeclectorUINum)
         {
-            randomNum[i] = Random.Range(0, DataManager.Instance().SoulList.Count);
+            randomNum[i] = Random.Range(0, DataManager.Instance.SoulList.Count);
             if (FindNumber(i))
                 continue;
             foreach(string name in playerSoulList)
             {
-                result = name == DataManager.Instance().SoulList[randomNum[i]];
+                result = name == DataManager.Instance.SoulList[randomNum[i]];
                 if (result)
                     break;
             }
             if (result)
                 continue;
-            soulList.Add((DataManager.Instance().SoulList[randomNum[i]], true));
+            soulList.Add((DataManager.Instance.SoulList[randomNum[i]], true));
             i++;
         }
     }
@@ -111,7 +111,7 @@ public class Statue : MonoBehaviour
         {
             isConnectedPlayer = false;
             isActivatedUI = false;
-            UIManager.GetUIManager().HideStatueUi();
+            UIManager.Instance.HideStatueUi();
         }
     }
 }

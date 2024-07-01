@@ -13,7 +13,7 @@ public class StatueUI : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        for(int i = 0; i < UIManager.GetUIManager().SoulSeclectorUINum; i++)
+        for(int i = 0; i < UIManager.Instance.SoulSeclectorUINum; i++)
         {
             soulSelectorUI.Add(Instantiate(UIprefab, parents) as GameObject);
             soulSelectorUI[i].GetComponent<SoulSelectorUI>().Initialize(i);
